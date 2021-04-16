@@ -4,7 +4,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import {PencilSquare } from 'react-bootstrap-icons';
 import {Link} from 'react-router-dom';
-import BeatLoader from 'react-spinners';
+import BeatLoader from 'react-spinners/BeatLoader';
+import ErrorPage from './ErrorPage.component'
 
 
 
@@ -29,10 +30,11 @@ export default class listEmployees extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            position:0,
-            needRender:null,
-            showSpinner: true,
-            employees: []
+            isLoading: true,
+            apiError: null,
+            errorMessage: '',
+            loading: true,
+            employees: [],
 
 
         }
@@ -42,7 +44,7 @@ export default class listEmployees extends Component {
 
     
     
-   async componentDidMount(){
+   async componentDidMount(error){
         this.timeout = setTimeout ( () => {
             this.setState({showSpinner: false});
             console.log(this.state)
@@ -53,6 +55,13 @@ export default class listEmployees extends Component {
         .then(Response => {
             this.setState({
                 employees : Response.data
+            })
+        })
+        .catch(error => {
+            this.setState({
+                apiError: true,
+                errorMessage: 'API Error',
+                isLoading: false
             })
         })
     }
@@ -75,12 +84,20 @@ export default class listEmployees extends Component {
 
 
     render(){
-        if(this.state.showSpinner){
+        if(this.state.isLoading){
             return( 
-            <div style={{margin:'auto', width:'5%',marginTop:'10%'}}>
-                <BeatLoader color='718FEB'/>
+            <div style={{textAlign:"center"}}>
+                <BeatLoader color={'gray'} loading={this.state.loading} size={20}/>
             </div>
 
+            )
+        }
+
+        if(this.state.apiError){
+            return(
+                <div style={{marginLeft:'50%', width:'25%',marginTop:'20%'}}>
+                    <ErrorPage errorMessage={this.state.errorMessage}/>
+                </div>
             )
         }
         return(
