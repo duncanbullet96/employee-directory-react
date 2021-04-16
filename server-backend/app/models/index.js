@@ -10,7 +10,7 @@ const sequelize = new Sequelize(                    //initialize a new Sequelize
     {
         host: dbConfig.HOST, 
         dialect: dbConfig.dialect, 
-        operatorsAliases: false, 
+        operatorsAliases: 0, 
         //still hurts
         pool: {
             max: dbConfig.pool.max, 

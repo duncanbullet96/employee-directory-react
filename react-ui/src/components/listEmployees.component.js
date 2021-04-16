@@ -4,8 +4,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import {PencilSquare } from 'react-bootstrap-icons';
 import {Link} from 'react-router-dom';
-import BeatLoader from 'react-spinners/BeatLoader';
-import ErrorPage from './ErrorPage.component'
+
+import {ErrorPage, LoadingItem} from './site-components/site-utils.component'
 
 
 
@@ -46,15 +46,18 @@ export default class listEmployees extends Component {
     
    async componentDidMount(error){
         this.timeout = setTimeout ( () => {
-            this.setState({showSpinner: false});
+            this.setState({isLoading: false});
             console.log(this.state)
-        }, 500);
+        }, 10);
         
         //console.log("ListEmployee did mount")
         axios.get("http://localhost:8080/api/empdir/")
         .then(Response => {
+            console.log(Response);
+            if(Response.status == '200')
             this.setState({
-                employees : Response.data
+                employees : Response.data,
+                isLoading: false
             })
         })
         .catch(error => {
@@ -87,7 +90,7 @@ export default class listEmployees extends Component {
         if(this.state.isLoading){
             return( 
             <div style={{textAlign:"center"}}>
-                <BeatLoader color={'gray'} loading={this.state.loading} size={20}/>
+                <LoadingItem loading={this.state.isLoading} positon='center'/>
             </div>
 
             )
@@ -95,7 +98,13 @@ export default class listEmployees extends Component {
 
         if(this.state.apiError){
             return(
-                <div style={{marginLeft:'50%', width:'25%',marginTop:'20%'}}>
+                <div className="error-wrapper" style={{marginTop:'10%'}}>
+                    <ErrorPage errorMessage={this.state.errorMessage}/>
+                </div>
+            )
+        } else if(this.state.employees.length === 0){
+            return(
+                <div className="error-wrapper" style={{marginTop:'10%'}}>
                     <ErrorPage errorMessage={this.state.errorMessage}/>
                 </div>
             )

@@ -63,10 +63,7 @@ class App extends Component {
 
 
   hideToast = () =>{
-    setTimeout(() => {
       this.setState({toastShow: false})
-    }, 1000);
-    
   };
 
 
