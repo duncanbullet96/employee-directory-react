@@ -2,27 +2,21 @@ const db = require("../models");            //pulls in the /models/index.js file
 const AdminTable = db.admin_table;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new AdminTable
+// Create and Save a new admin table item
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.title) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-    return;
-  }
 
-  // Create a AdminTable
-  const item = {
-    item_id:this.req.item_id, 
-    item_parent_collection: this.req.item_parent_collection,
-    item_name: this.req.item_name,
-    item_value: this.req.item_value
 
+  // Create a item
+  const admin_item = {
+    item_id: req.body.item_id, 
+    item_parent_collection: req.body.item_parent_collection,
+    item_name: req.body.item_name,
+    item_value: req.body.item_value
   };
 
-  // Save AdminTable in the database
-  AdminTable.create(employee)
+  // Save item  in the database
+  AdminTable.create(admin_item)
     .then(data => {
       res.send(data);
     })
@@ -36,10 +30,10 @@ exports.create = (req, res) => {
 
 // Retrieve all EmpDBs from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+//  const item_name = req.query.item_name;
+//  var condition = item_name ? { title: { [Op.like]: `%${item_name}%` } } : null;
 
-  AdminTable.findAll({ where: condition })
+  AdminTable.findAll()
     .then(data => {
       res.send(data);
     })

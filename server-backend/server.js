@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { urlencoded } = require('body-parser');
 
+
+
 const app = express();
 
 var corsOptions = {
@@ -23,6 +25,7 @@ app.get("/", (req, res)=> {
 
 
 require("./app/routes/routes.js")(app);
+require("./app/routes/admin-table.routes.js")(app);
 
 //set port and listen for requests
 const PORT = process.env.PORT || 8080
@@ -31,9 +34,16 @@ app.listen(PORT, () => {
 
 });
 
-const db = require("./app/models");
-db.sequelize.sync();
+const employee_db = require("./app/models");
+employee_db.sequelize.sync();
 //db.sequelize.sync({force: true}).then( () => {
 //    console.log("Drop and re-sync DB");
 //});
+
+const admin_db = require("./app/models");
+admin_db.sequelize.sync();
+//db.sequelize.sync({force: true}).then( () => {
+//    console.log("Drop and re-sync DB");
+//});
+
 

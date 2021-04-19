@@ -1,9 +1,9 @@
 // configuration file for the sequalize mysql connection
 require
 module.exports = {
-    HOST: "localhost",
-    USER: "root",
-    PASSWORD: "root",
+    HOST: "intranet-hci",
+    USER: "node_service",
+    PASSWORD: "Milo1414",
     DB:"opcon", 
     dialect: "mysql",
     pool: { //sql paramters for the connection
