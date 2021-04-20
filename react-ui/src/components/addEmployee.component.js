@@ -1,9 +1,12 @@
 //import { Link } from 'react-router-dom';
 //import axios from "../../../old/backend/node_modules/axios";
 
-import React from "react";
+import axios from "axios";
+import React, { Fragment } from "react";
+import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import EmployeeDirectoryService from '../services/empDir.services';
+
 
 class AddEmp extends React.Component{
     constructor(props){
@@ -28,17 +31,36 @@ class AddEmp extends React.Component{
             location:'',
             title:'',
 
-            sumitted: false
+            sumitted: false,
+
+            department_list:[]
+            
 
         }
 
+    }///end constructor
+
+    componentDidMount(){
+        axios.get("http://localhost:8080/api/admin/departments",{
+            params:{
+                "item_parent_collection":"adv_settings",
+                "item_name":"department_locations"
+            }
+        })
+        .then(Response=>{
+            console.log(Response);
+            this.setState({
+                department_list: Response.data
+            })
+            console.log(this.state);
+        })
     }
+
     onChangeFirstName(e){
         this.setState({
             first_name: e.target.value
         });
     }
-
 
     onChangeLastName(e){
         this.setState({
@@ -111,14 +133,22 @@ class AddEmp extends React.Component{
             console.log(e);
         })
     }
+    
+    listDepartments = () =>{
+        console.log(this.state.department_list)
+
+
+
+    }
 
 
     render(){
+
         return(
             <div className="edit-form container mt-3">
                 <h4>Add New Employee</h4>
                 <br/>
-                <form>
+                <Form>
                     <div className="form-row">
                         <div className="form-group col-md-4">
                             <label htmlFor="first_name">First Name<span style={{color: 'red'}}>*</span></label>
@@ -177,13 +207,16 @@ class AddEmp extends React.Component{
                     <div className="form-row">
                         <div className="form-group col-md-4">
                             <label htmlFor="department">Department</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="department"
-                                        value={this.state.department}
-                                        onChange={this.onChangeDepartment}
-                                    />
+                            
+                            <Form.Control as="select" onChange={this.onChangeDepartment}>
+                            {this.state.department_list.map((currItem, i)=>{
+                                return(
+                                    <Fragment>
+                                            <option key={i} value={currItem.item_value} >{currItem.item_value}</option>
+                                    </Fragment>
+                                )
+                            })}
+                        </Form.Control>
                         </div>
                         <div className="form-group col-md-4">
                             <label htmlFor="location">Location</label>
@@ -201,7 +234,7 @@ class AddEmp extends React.Component{
                         <button type="button" to="/" onClick={this.onSubmit} className="btn btn-primary mr-3">Save</button>
                             <Link type="button" to="/" class="btn btn-secondary">Cancel</Link>
                     </div>
-                </form>
+                </Form>
 
 
             </div>

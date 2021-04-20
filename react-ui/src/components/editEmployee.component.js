@@ -1,11 +1,14 @@
-import react from "react";
+import React, { Fragment } from "react";
 import {Link} from 'react-router-dom';
 import EmployeeDirectoryService from '../services/empDir.services';
+import {Form} from 'react-bootstrap';
+import axios from 'axios';
 
 
 
 
-class EditEmp extends react.Component{
+
+class EditEmp extends React.Component{
     constructor(props){
         super(props)
 
@@ -29,17 +32,37 @@ class EditEmp extends react.Component{
             first_name: '',
             last_name: '',
             phone: '',
-            email: ''
-        }
+            email: '',
+            department:'',
+            location:'',
+
+
+        },
+
+        department_list:[]
     }
    // this.showToast = this.showToast.bind(this);
    // this.hideToast = this.hideToast.bind(this);
     
 
 }
+
 componentDidMount(){
-    this.getEmployee(this.props.match.params.id)
+    this.getEmployee(this.props.match.params.id);
     //console.log("editEmployee did mount")
+    axios.get("http://localhost:8080/api/admin/departments",{
+        params:{
+            "item_parent_collection":"adv_settings",
+            "item_name":"department_locations"
+        }
+    })
+    .then(AxiosResponse=>{
+        console.log(AxiosResponse);
+        this.setState({
+            department_list: AxiosResponse.data
+        })
+        console.log(this.state);
+    })
 }
 
 getEmployee(id){
@@ -101,6 +124,28 @@ onChangeEmail(e){
     }))
 }
 
+onChangeDepartment(e){
+    const department = e.target.value
+
+    this.setState(prevState => ({
+            currentEmployee:{
+            ...prevState.currentEmployee,
+            department:department
+            }
+    }))
+}
+
+onChangeLocation(e){
+    const location = e.target.value
+
+    this.setState(prevState => ({
+            currentEmployee:{
+            ...prevState.currentEmployee,
+            location:location
+            }
+    }))
+}
+
 onSubmit(e){
     EmployeeDirectoryService.update(
         this.state.currentEmployee.id,
@@ -154,50 +199,64 @@ onRemove(e){
              <div className="edit-form container mt-3">
                     <h4>Edit Employee</h4>
                     <br/>
-                    <div className="form-group">
-                        <div className="form-row">
-                            <div className="col">
-                                <label htmlFor="first_name">First Name</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="first_name"
-                                        value={ currentEmployee.first_name}
-                                        onChange={this.onChangeFirstName}
-                                    />
+                    <Form>
+                        <div className="row g-3">
+                            <div className="col-md-4">
+                                <label htmlFor="first_name" className="form-label">First Name</label>
+                                <input type="text" className="form-control" id="first_name" 
+                                        value={ currentEmployee.first_name}onChange={this.onChangeFirstName}/>
                             </div>
-                            <div className="col">
-                                <label htmlFor="last_name">Last Name</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="last_name"
-                                        value={ currentEmployee.last_name}
-                                        onChange={this.onChangeLastName}
-                                    />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="phone">Phone</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="phone"
-                                        value={ currentEmployee.phone}
-                                        onChange={this.onChangePhone}
-                                    />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="email">Email</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="email"
-                                        value={ currentEmployee.email}
-                                        onChange={this.onChangeEmail}
-                                    />
+                            <div className="col-md-4">
+                                <label htmlFor="last_name" className="form-label">Last Name</label>
+                                <input type="text" className="form-control" id="last_name" 
+                                        value={ currentEmployee.last_name}onChange={this.onChangeLastName}/>
                             </div>
                         </div>
                         <br/>
+                        <div className="row g-3">
+                            <div className="col-md-2">
+                                <label htmlFor="phone" className="form-label">Phone</label>
+                                <input type="text" className="form-control" id="phone" 
+                                        value={ currentEmployee.phone}onChange={this.onChangePhone}/>
+                            </div>
+                            <div className="col-md-4">
+                                <label htmlFor="phone" className="form-label">Email</label>
+                                <input type="text" className="form-control" id="email" 
+                                        value={ currentEmployee.email}onChange={this.onChangeEmail}/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div className="row g-3">
+                            <div className="col-md-3">
+                                <label htmlFor="department" className="form-label">Department</label>
+                                    <Form.Control type="text" className="form-control" readOnly value={currentEmployee.department}/>
+                            </div>
+                            <div className="col-md-3">
+                                <label htmlFor="location" className="form-label">Location</label>
+                                <input type="text" className="form-control" id="location" 
+                                        value={ currentEmployee.location}onChange={this.onChangeLocation}/>
+                            </div>
+                        </div>
+                        
+                        
+
+
+
+
+                    </Form>
+
+
+
+
+
+
+
+
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <br/>
+                        </div>
                     </div>
                     <div class="form-group">
                             <button type="button" to="/" onClick={this.onSubmit} className="btn btn-primary mr-3">Save</button>

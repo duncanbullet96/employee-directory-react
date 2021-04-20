@@ -21,6 +21,7 @@ app.use(urlencoded({extended: true}));
 //a simple route for us
 app.get("/", (req, res)=> {
     res.json({message: "This is the express server for the user phone list for the HC Intranet"})
+
 });
 
 

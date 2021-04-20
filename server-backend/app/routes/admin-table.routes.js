@@ -10,7 +10,7 @@ module.exports = app => {
     router.get("/", AdminTable.findAll);
 
     // Retrieve all published Tutorials
-    router.get("/published", AdminTable.findAllPublished);
+    router.get("/departments", AdminTable.findDepartments);
 
     // Retrieve a single Tutorial with id
     router.get("/:id", AdminTable.findOne);
@@ -20,7 +20,7 @@ module.exports = app => {
 
     // Delete a Tutorial with id
     router.delete("/:id", AdminTable.delete);
-
+ 
     // Delete all Tutorials
     router.delete("/", AdminTable.deleteAll);
 

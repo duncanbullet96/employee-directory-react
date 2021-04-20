@@ -129,7 +129,7 @@ exports.deleteAll = (req, res) => {
 
 // find all published AdminTable
 exports.findAllPublished = (req, res) => {
-  AdminTable.findAll({ where: { published: true } })
+  AdminTable.findAll({ where: { item_name: '' } })
     .then(data => {
       res.send(data);
     })
@@ -140,3 +140,12 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+exports.findDepartments = (req, res) =>{
+  AdminTable.findAll({
+    attributes: ['item_value']
+  })
+  .then(data=>{
+    res.send(data);
+  })
+}

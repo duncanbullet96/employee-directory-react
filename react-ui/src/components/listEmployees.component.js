@@ -17,6 +17,8 @@ const EmployeeProps = props =>(
         <td>{props.employee.last_name}</td>
         <td>{props.employee.phone}</td>
         <td>{props.employee.email}</td>
+        <td>{props.employee.department}</td>
+        <td>{props.employee.location}</td>
         <td>
             <Link to={"/empdir/" + props.employee.id}><PencilSquare/></Link>
         </td>
@@ -123,6 +125,8 @@ export default class listEmployees extends Component {
                             <th>Last Name</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <th>Department</th>
+                            <th>Location</th>
                             <th>Edit</th>
                         </tr>
                     </thead>
