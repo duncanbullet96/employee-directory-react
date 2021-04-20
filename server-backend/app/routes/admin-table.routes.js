@@ -9,8 +9,11 @@ module.exports = app => {
     //retreive all tutorials 
     router.get("/", AdminTable.findAll);
 
-    // Retrieve all published Tutorials
+    // Retrieve all departments
     router.get("/departments", AdminTable.findDepartments);
+
+    //retrieve all locations
+    router.get("/locations", AdminTable.findLocations);
 
     // Retrieve a single Tutorial with id
     router.get("/:id", AdminTable.findOne);

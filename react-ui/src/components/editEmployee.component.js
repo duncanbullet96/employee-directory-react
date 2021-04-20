@@ -3,6 +3,10 @@ import {Link} from 'react-router-dom';
 import EmployeeDirectoryService from '../services/empDir.services';
 import {Form} from 'react-bootstrap';
 import axios from 'axios';
+import {InputModal} from '../components/site-components/InputModal.component'
+
+
+
 
 
 
@@ -16,6 +20,7 @@ class EditEmp extends React.Component{
         this.onChangeLastName = this.onChangeLastName.bind(this);
         this.onChangePhone = this.onChangePhone.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
+       // this.onChangeDepartment = this.onChangeDepartment(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onRemove = this.onRemove.bind(this);
 
@@ -26,6 +31,7 @@ class EditEmp extends React.Component{
 
 
     this.state = {
+        showModal:false,
         stateRender: null,
         currentEmployee: {
             id: null,
@@ -45,6 +51,10 @@ class EditEmp extends React.Component{
    // this.hideToast = this.hideToast.bind(this);
     
 
+}
+
+handleModalClose = () =>{
+    this.setState({showModal: false})
 }
 
 componentDidMount(){
@@ -125,14 +135,14 @@ onChangeEmail(e){
 }
 
 onChangeDepartment(e){
-    const department = e.target.value
+    const newdepartment = e.target.value
 
     this.setState(prevState => ({
-            currentEmployee:{
-            ...prevState.currentEmployee,
-            department:department
-            }
-    }))
+        currentEmployee:{
+        ...prevState.currentEmployee,
+        department:newdepartment
+        }
+}))
 }
 
 onChangeLocation(e){
@@ -189,6 +199,11 @@ onRemove(e){
         
     }
 
+    onEditDepartment = () =>{
+        console.log('input modal function activated')
+            this.setState({showModal:true})
+    }
+
 
 
     render(){
@@ -197,6 +212,9 @@ onRemove(e){
             <div id="parent-div">
              
              <div className="edit-form container mt-3">
+                 <div className="modal-div">
+                     <InputModal showModal={this.state.showModal} handleClose={this.handleModalClose} selectProps={this.state.department_list} defaultValueProps={currentEmployee.department}/> 
+                 </div>
                     <h4>Edit Employee</h4>
                     <br/>
                     <Form>
@@ -228,9 +246,20 @@ onRemove(e){
                         <br/>
                         <div className="row g-3">
                             <div className="col-md-3">
-                                <label htmlFor="department" className="form-label">Department</label>
-                                    <Form.Control type="text" className="form-control" readOnly value={currentEmployee.department}/>
+                                <form>
+                                    <label htmlFor="first_name">Please Select Department<span style={{color: 'red'}}>*</span></label>
+                                        <Form.Control as="select" onChange={this.onChangeDepartment.bind(this)} value={currentEmployee.department} >
+                                        {this.state.department_list.map((currItem, i)=>{
+                                            return(
+                                                <Fragment>
+                                                    <option key={i} value={currItem.item_value}>{currItem.item_value}</option>
+                                                </Fragment>
+                                            )
+                                        })}
+                                    </Form.Control>
+                                </form>
                             </div>
+
                             <div className="col-md-3">
                                 <label htmlFor="location" className="form-label">Location</label>
                                 <input type="text" className="form-control" id="location" 

@@ -37,16 +37,23 @@
 #settings-div{
   margin-left: clamp(250px, 20vw, 20vw);
   width: clamp(500px,60vw,60vw);
-  height: clamp(300px,60vh,100vh);
   border: 1.6px solid rgba(0, 0, 0, 0.178);
   border-radius: 5px;
+  padding-bottom: 1%;
 
 }
 
 .adv-settings-div{
   padding-left:20px;
+  padding-right:20px;
   margin-top: 20px;
 }
+
+.table-wrapper{
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
 
 @keyframes App-logo-spin {
   from {

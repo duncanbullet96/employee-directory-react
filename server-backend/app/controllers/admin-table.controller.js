@@ -149,3 +149,15 @@ exports.findDepartments = (req, res) =>{
     res.send(data);
   })
 }
+
+exports.findLocations = (req, res) =>{
+  AdminTable.findAll({
+    attributes: ['id','item_value'],
+    where: {item_parent_collection: 'adv_settings',
+      item_name:'locations'}
+  })
+  .then(data=>{
+    res.send(data);
+  })
+}
+

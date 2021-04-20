@@ -15,6 +15,10 @@ class AdminTableService {
         return http.post("/admin/", data);
     }
 
+    createNewLocation(data) {
+        return http.post("/admin/", data);
+    }
+
     update(id, data) {
         return http.put(`/empDir/${id}`, data);
     }
