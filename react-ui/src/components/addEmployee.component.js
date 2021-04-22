@@ -33,7 +33,8 @@ class AddEmp extends React.Component{
 
             sumitted: false,
 
-            department_list:[]
+            department_list:[],
+            location_list:[]
             
 
         }
@@ -41,10 +42,17 @@ class AddEmp extends React.Component{
     }///end constructor
 
     componentDidMount(){
+        this.fetchDepartments();
+        this.fetchLocations();
+
+    }
+
+
+    fetchDepartments = () =>{
         axios.get("http://localhost:8080/api/admin/departments",{
             params:{
                 "item_parent_collection":"adv_settings",
-                "item_name":"department_locations"
+                "item_name":"departments"
             }
         })
         .then(Response=>{
@@ -54,6 +62,23 @@ class AddEmp extends React.Component{
             })
             console.log(this.state);
         })
+    }
+
+    fetchLocations = () =>{
+        axios.get("http://localhost:8080/api/admin/locations",{
+            params:{
+                "item_parent_collection":"adv_settings",
+                "item_name":"locations"
+            }
+        })
+        .then(Response=>{
+            console.log(Response);
+            this.setState({
+                location_list: Response.data
+            })
+            console.log(this.state);
+        })
+
     }
 
     onChangeFirstName(e){
@@ -219,14 +244,17 @@ class AddEmp extends React.Component{
                         </Form.Control>
                         </div>
                         <div className="form-group col-md-4">
-                            <label htmlFor="location">Location</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="location"
-                                        value={this.state.location}
-                                        onChange={this.onChangeLocation}
-                                    />
+                            <label htmlFor="locations">Locations</label>
+                                
+                                <Form.Control as="select" onChange={this.onChangeLocation}>
+                                {this.state.location_list.map((currLocation, i)=>{
+                                    return(
+                                        <Fragment>
+                                                <option key={i} value={currLocation.item_value} >{currLocation.item_value}</option>
+                                        </Fragment>
+                                    )
+                                })}
+                            </Form.Control>
                         </div>
                     </div>
                     <br/>

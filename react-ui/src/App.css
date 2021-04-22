@@ -54,6 +54,12 @@
   padding-right: 1%;
 }
 
+.subsetting-wrapper{
+  border:1.6px solid rgba(0,0,0,0.178);
+  border-radius:5px;
+  
+}
+
 
 @keyframes App-logo-spin {
   from {

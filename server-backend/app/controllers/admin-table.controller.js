@@ -143,7 +143,9 @@ exports.findAllPublished = (req, res) => {
 
 exports.findDepartments = (req, res) =>{
   AdminTable.findAll({
-    attributes: ['item_value']
+    attributes: ['id','item_value'],
+    where: {item_parent_collection: 'adv_settings',
+      item_name:'departments'}
   })
   .then(data=>{
     res.send(data);

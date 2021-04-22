@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { Fragment, useState } from "react";
-import {Tabs, Tab, Table, Button} from "react-bootstrap";
+import {Tabs, Tab, Table, Button, Accordion, Card, NavLink} from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
-import AdminTableService from '../../services/admin-table.services'
+import AdminTableService from '../../services/admin-table.services';
+import {Trash, trash} from 'react-bootstrap-icons';
 
 class InputModal extends React.Component {
     constructor(props){
@@ -98,7 +99,8 @@ class InputModalLocations extends React.Component {
         }
     }
 
-    onSubmitItemAdd(e){
+    onSubmitItemAdd(event,e){
+        event.preventDefault();
         var data = {
             item_parent_collection: this.state.item_parent_collection,
             item_name: this.state.item_name,
@@ -169,7 +171,7 @@ class DepartmentSettings extends React.Component{
         super(props)
         this.state ={
             showModal : false,
-            items: [],
+            department_list: [],
         }
 
         this.handleModalClose = this.handleModalClose.bind(this);
@@ -179,10 +181,10 @@ class DepartmentSettings extends React.Component{
 
     
     componentDidMount(){
-        axios.get("http://localhost:8080/api/admin/")
+        axios.get("http://localhost:8080/api/admin/departments")
         .then(Response => {
             console.log(Response);
-            this.setState({items: Response.data})
+            this.setState({department_list: Response.data})
             console.log('state:')
             console.log(this.state)
         })
@@ -202,10 +204,10 @@ class DepartmentSettings extends React.Component{
 
 
     refreshSettings = () =>{
-        axios.get("http://localhost:8080/api/admin")
+        axios.get("http://localhost:8080/api/admin/departments")
         .then(Response=>{
             console.log(Response);
-            this.setState({items: Response.data});
+            this.setState({department_list: Response.data});
         })
     }
 
@@ -221,7 +223,7 @@ class DepartmentSettings extends React.Component{
     }
     render(){
         return(
-            <div id="department-settings" style={{border:'1.6px solid rgba(0,0,0,0.178', borderRadius:'5px'}}>
+            <div className="subsetting-wrapper" id="department-settings">
             <h6 className="mt-2 ml-2">Department Field</h6>
                 <div className="modal-div container" id="modal-div">
                     <InputModal showModal={this.state.modalShow} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
@@ -233,19 +235,17 @@ class DepartmentSettings extends React.Component{
                     <Table bordered hover>
                         <thead>
                             <tr>
-                                <th>Item #</th>
                                 <th>Department Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.items.map((currItem, i)=>{
+                            {this.state.department_list.map((department_list, i)=>{
                                 return(
                                     <Fragment>
                                         <tr key={i}>
-                                            <td>{currItem.id}</td>
-                                            <td>{currItem.item_value}</td>
-                                            <td><button className="btn btn-danger" onClick={this.deleteItem.bind(this,currItem.id)}>Remove</button></td>
+                                            <td>{department_list.item_value}</td>
+                                            <td><Button variant="link" onClick={this.deleteItem.bind(this,department_list.id)}><Trash size={24} color="red"/></Button></td>
                                         </tr>
                                     </Fragment>
                                 )
@@ -341,7 +341,7 @@ class LocationSettings extends React.Component{
                                     <Fragment>
                                         <tr key={i}>
                                             <td>{currLocation.item_value}</td>
-                                            <td><button className="btn btn-danger" onClick={this.deleteItem.bind(this,currLocation.id)}>Remove</button></td>
+                                            <td><Button variant="link"  onClick={this.deleteItem.bind(this,currLocation.id)}><Trash size={24} color="red"/></Button></td>
                                         </tr>
                                     </Fragment>
                                 )
@@ -379,9 +379,36 @@ class LookupSettings extends React.Component{
             <div className="adv-settings-div" id="lookup-settings">
                 <div className="header-div">
                     <h4>Lookup Settings</h4>
+                    <p>Please select a lookup setting</p>
                     <br></br>
-                    <DepartmentSettings/>
-                    <LocationSettings/>
+                    <Accordion>
+                        <Card>
+                            <Card.Header>
+                                <Accordion.Toggle as={Button} variant="Link" eventKey="0">
+                                    Department
+                                </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="0">
+                                <Card.Body>
+                                    <DepartmentSettings/>
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                        <Card>
+                            <Card.Header>
+                                <Accordion.Toggle as={Button} variant="Link" eventKey="1">
+                                    Locations
+                                </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="1">
+                                <Card.Body>
+                                    <LocationSettings/>
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                    
+                    <br/>
                 </div>
 
             </div>
