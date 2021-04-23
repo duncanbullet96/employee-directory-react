@@ -29,6 +29,7 @@ app.get("/", (req, res)=> {
 require("./app/routes/routes.js")(app);
 require("./app/routes/admin-table.routes.js")(app);
 require("./app/routes/ad-auth.routes.js")(app);
+require("./app/routes/UserTable.routes.js")(app);
 
 
 
@@ -51,26 +52,8 @@ admin_db.sequelize.sync();
 //    console.log("Drop and re-sync DB");
 //});
 
-
-/* 
-const ActiveDirectory = require('activedirectory2')
-const domain = '@heart.local'
-const config = { url: 'ldap://hciad3.heart.local',
-               baseDN: 'OU=domain users,dc=heart,dc=local',
-               username: 'wduncan'+ domain,
-               password: 'Bullet96!' };
-const ad = new ActiveDirectory(config);
-
-ad.authenticate(config.username, config.password, function(err, auth) {
-  if (err) {
-    console.log('ERROR: '+JSON.stringify(err));
-    return;
-  }
-
-  if (auth) {
-    console.log('Authenticated!');
-  }
-  else {
-    console.log('Authentication failed!');
-  }
-}); */
+const user_table = require("./app/models");
+user_table.sequelize.sync();
+//db.sequelize.sync({force: true}).then( () => {
+//    console.log("Drop and re-sync DB");
+//});

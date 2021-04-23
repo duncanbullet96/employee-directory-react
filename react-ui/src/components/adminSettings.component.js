@@ -1,5 +1,5 @@
 import React from 'react';
-import GeneralSettings from './settings/GeneralSettings.component';
+import {UserAccess} from './settings/UserAccess.component';
 import {AdvancedSettings} from './settings/AdvancedSettings.component';
 import {Button} from 'react-bootstrap'
 //import {Route, Switch} from 'react-router-dom';
@@ -67,13 +67,13 @@ class AdminSettings extends React.Component{
                 </div>
                     <div className="float-left mt-5 ml-5" >
                         <div className="list-group" style={{width: 'clamp(100px,200px,100vw)'}}>
-                            <Button active={this.state.showGeneral} className={"list-group-item list-group-item-action"} onClick={this.showGeneralSettings}>General</Button>
+                            <Button active={this.state.showGeneral} className={"list-group-item list-group-item-action"} onClick={this.showGeneralSettings}>Users & Access</Button>
                             <Button active={this.state.showAdvanced} className={"list-group-item list-group-item-action"} onClick={this.showAdvancedSettings}>Advanced</Button>
                         </div>
                         
                 </div>
                     <div className="settings-div" id="settings-div" >
-                        {showGeneral && <GeneralSettings/>}
+                        {showGeneral && <UserAccess/>}
                         {showAdvanced && <AdvancedSettings/>}
                     </div>
             </div>

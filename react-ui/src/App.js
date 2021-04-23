@@ -29,7 +29,9 @@ class App extends Component {
       toastTimeout: 3000,
       toastValue: '',
       renderApp: 0,
-      userLoggedIn: false
+      userLoggedIn: true,
+      currentUser:null,
+      userToken:null
     }
 
    // this.onChildClicked = this.onChildClicked.bind(this);

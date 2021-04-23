@@ -28,6 +28,7 @@ db.Sequelize = Sequelize; //db.Sequelize is equal to the CAPITAL S Sequelize
 db.sequelize = sequelize;   // inverse 
 
 db.admin_table = require("./admin-table.model.js")(sequelize, Sequelize);
+db.user_table = require("./userTable.model.js")(sequelize, Sequelize);
 db.wp_participants_database = require("./model.js")(sequelize, Sequelize); //our db.wp_participants_database is equal to the model information from model.js 
                                                                             // aka this our scheme pull 
 
