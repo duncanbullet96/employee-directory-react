@@ -9,10 +9,14 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "activedirectory": "^0.7.2",
+    "async": "^3.2.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "bunyan": "^1.8.15",
     "devextreme": "^20.2.6",
     "jquery": "^3.6.0",
+    "ldapjs": "^2.2.4",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
@@ -25,6 +29,7 @@
     "react-table": "^7.6.3",
     "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
+    "underscore": "^1.13.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -46,6 +51,7 @@
       "not op_mini all"
     ],
     "development": [
+      "ie 11",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"

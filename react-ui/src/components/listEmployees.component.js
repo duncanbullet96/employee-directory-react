@@ -5,7 +5,8 @@ import axios from "axios";
 import {PencilSquare } from 'react-bootstrap-icons';
 import {Link} from 'react-router-dom';
 
-import {ErrorPage, LoadingItem} from './site-components/site-utils.component'
+import {ErrorPage, LoadingItem, NothingHere} from './site-components/site-utils.component'
+
 
 
 
@@ -100,14 +101,14 @@ export default class listEmployees extends Component {
 
         if(this.state.apiError){
             return(
-                <div className="error-wrapper" style={{marginTop:'10%'}}>
+                <div className="error-wrapper" >
                     <ErrorPage errorMessage={this.state.errorMessage}/>
                 </div>
             )
         } else if(this.state.employees.length === 0){
             return(
-                <div className="error-wrapper" style={{marginTop:'10%'}}>
-                    <ErrorPage errorMessage={this.state.errorMessage}/>
+                <div className="nothing-wrapper" >
+                    <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"}/>
                 </div>
             )
         }

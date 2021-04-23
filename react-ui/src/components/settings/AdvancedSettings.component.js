@@ -1,9 +1,9 @@
 import axios from "axios";
-import React, { Fragment, useState } from "react";
-import {Tabs, Tab, Table, Button, Accordion, Card, NavLink} from "react-bootstrap";
+import React, { Fragment } from "react";
+import {Tabs, Tab, Table, Button, Accordion, Card} from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import AdminTableService from '../../services/admin-table.services';
-import {Trash, trash} from 'react-bootstrap-icons';
+import {Trash} from 'react-bootstrap-icons';
 
 class InputModal extends React.Component {
     constructor(props){
@@ -368,10 +368,6 @@ class LocationSettings extends React.Component{
 
 
 class LookupSettings extends React.Component{
-    constructor(props){
-        super(props);
-
-    }
 
 
     render(){

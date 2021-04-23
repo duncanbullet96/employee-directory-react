@@ -60,12 +60,62 @@
   
 }
 
+.error-wrapper{
+  Margin-top:10%;
+}
 
-@keyframes App-logo-spin {
+.nothing-wrapper{
+  margin-top: 1%;
+}
+
+.default-text{
+  color:#495057c9 !important;
+}
+
+
+
+#up-arrow{
+  top:0 !important;
+}
+
+
+/* ********************************** Heart Beat Animation *************************** */
+.heart-beat-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 5;
+  animation: dash 3s linear infinite;
+}
+
+@keyframes dash {
   from {
-    transform: rotate(0deg);
+    stroke-dashoffset: 822;
   }
   to {
-    transform: rotate(360deg);
+    stroke-dashoffset: 0;
   }
 }
+/* ******************Ending Heart Beat Animation ********************************************* */
+
+
+
+
+
+
+/* *********************************************Begin Background Gradiant Image***************************************************** */
+
+
+.login-div-main{
+  height: 100vh;
+  background: linear-gradient(#222d32cb 10%, #222D32);
+}
+
+
+/* *********************************************End Background Gradiant Image***************************************************** */
+
+
+
+
+
+
+
+

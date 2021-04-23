@@ -232,8 +232,8 @@ class AddEmp extends React.Component{
                     <div className="form-row">
                         <div className="form-group col-md-4">
                             <label htmlFor="department">Department</label>
-                            
                             <Form.Control as="select" onChange={this.onChangeDepartment}>
+                                <option className="default-text">Please Select a Department</option>
                             {this.state.department_list.map((currItem, i)=>{
                                 return(
                                     <Fragment>

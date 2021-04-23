@@ -9,6 +9,7 @@ import ListEmployees from "./components/listEmployees.component";
 import AddEmp from './components/addEmployee.component';
 import EditEmp from './components/editEmployee.component';
 import AdminSettings from './components/adminSettings.component';
+import {LoginScreen} from './components/auth/Login.component';
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,7 +28,8 @@ class App extends Component {
       toastShow: false,
       toastTimeout: 3000,
       toastValue: '',
-      renderApp: 0
+      renderApp: 0,
+      userLoggedIn: false
     }
 
    // this.onChildClicked = this.onChildClicked.bind(this);
@@ -70,82 +72,91 @@ class App extends Component {
   
 
   render() {
-  return (
-    
-      
-      <div style={{
-        width: 'auto',
-        height: '100%'
-      }}>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/empdir" className="navbar-brand">Home</a>
-          <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/empdir"} className="nav-link">List All</Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/add"} className="nav-link">Add New</Link>
-            </li>
-          </div>
-          <div className="navbar-nav float-right">
-          <li className="nav-item">
-              <Dropdown>
-                <Dropdown.Toggle id="gear-dropdown">
-                  <Gear/>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Link to={"/admin"} className="nav-link" style={{color: 'black'}}>Admin</Link>
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-          </div>
-        </nav>
-        <div 
-        id="toast-div" 
-        aria-live="polite" 
-        aria-atomic="true" 
-          style={{
-            position: 'relative',
-            minHeight: '5%'
-          }}>
-              <Toast 
-                style={{position: 'absolute', top: 0, right:25}}
-                show={this.state.toastShow}
-                delay={this.state.toastTimeout}
-                autohide 
-                onClose={this.hideToast}
-                animation={true}>
-                <Toast.Header>
-                  <strong className="mr-auto">HCI Employee Directory</strong>
-                </Toast.Header>
-                <Toast.Body>
-                  {this.state.toastValue}
-                </Toast.Body>
-              </Toast>
-          </div>  
-        <div className="parent-div">
-          
-        <Switch>
-          <Route exact path={["/","/empdir"]} render={(props) => <ListEmployees {...props}/>}/>
-          <Route exact path="/admin" component={AdminSettings}/>
-
-          <Route path="/add" 
-            render={
-              (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess}/>
-              )}/>
-
-          <Route path="/empdir/:id" 
-            render={
-              (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
-              )}/>
-        </Switch>
+    if(this.state.userLoggedIn){
+        return (
+          <div style={{
+            width: 'auto',
+            height: '100%'
+            }}>
+              <nav className="navbar navbar-expand navbar-dark bg-dark">
+                <a href="/empdir" className="navbar-brand">Home</a>
+                <div className="navbar-nav mr-auto">
+                  <li className="nav-item">
+                    <Link to={"/empdir"} className="nav-link">List All</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/add"} className="nav-link">Add New</Link>
+                  </li>
+                </div>
+                <div className="navbar-nav float-right">
+                <li className="nav-item">
+                    <Dropdown>
+                      <Dropdown.Toggle id="gear-dropdown">
+                        <Gear/>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item>
+                          <Link to={"/admin"} className="nav-link" style={{color: 'black'}}>Admin</Link>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </li>
+                </div>
+              </nav>
+              <div 
+                id="toast-div" 
+                aria-live="polite" 
+                aria-atomic="true" 
+                style={{
+                  position: 'relative',
+                  minHeight: '5%'
+                }}>
+                    <Toast 
+                      style={{position: 'absolute', top: 0, right:25}}
+                      show={this.state.toastShow}
+                      delay={this.state.toastTimeout}
+                      autohide 
+                      onClose={this.hideToast}
+                      animation={true}>
+                        <Toast.Header>
+                          <strong className="mr-auto">HCI Employee Directory</strong>
+                        </Toast.Header>
+                        <Toast.Body>
+                        {this.state.toastValue}
+                        </Toast.Body>
+                      </Toast>
+                </div>  
+                <div className="parent-div">
+                  
+                <Switch>
+                  <Route exact path={["/","/empdir"]} render={(props) => <ListEmployees {...props}/>}/>
+                  <Route exact path="/admin" component={AdminSettings}/>
+        
+                  <Route path="/add" 
+                    render={
+                      (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess}/>
+                      )}/>
+        
+                  <Route path="/empdir/:id" 
+                    render={
+                      (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
+                      )}/>
+                </Switch>
+                </div>
+            </div>  //ending div
+      );
+    }
+    else{
+      return(
+        <div className="login-div-main" >
+          <LoginScreen/>
         </div>
-      </div>  //ending div
-  );
-}
-}
+      )
+    }
+  }
+
+}/// Closing Bracket for App Component *********************************************
+ 
 
 export default withRouter(App);
 

@@ -1,5 +1,7 @@
 import React from 'react';
-import {ReactComponent as SadFace} from '../site-components/frown-face.svg';
+import {ReactComponent as SadFace} from '../site-components/svgs/frown-face.svg';
+import {ReactComponent as EmptyBox} from '../site-components/svgs/empty-box.svg';
+import {ReactComponent as UpArrow} from './svgs/up-arrow.svg';
 import BeatLoader from 'react-spinners/BeatLoader';
 
 
@@ -20,6 +22,32 @@ class ErrorPage extends React.Component{
         )
     }
 };
+
+
+class NothingHere extends React.Component{
+    render(){
+        return(
+            <div id="nothing-here">
+                <div id="up-arrow">
+                    <UpArrow style={{height:'10vh'}}/>
+                </div>
+                <div className="error-page" style={{textAlign:'center'}}>
+                    <EmptyBox style={{height: '20vh', width:'20vw'}}/>
+                    <br/>
+                        <div style={{fontWeight:"bold", marginTop:'10px', fontSize:'24px'}}>
+                            Nothing Here!
+                        </div>
+                    <br/>
+                    <div style={{fontStyle:"italic"}}>
+                        {this.props.errorMessage}
+                    </div>
+                </div>
+            </div>
+
+        )
+    }
+};
+
 
 class LoadingItem extends React.Component{
     constructor(props){
@@ -43,5 +71,6 @@ class LoadingItem extends React.Component{
 
 export {
         ErrorPage, 
-        LoadingItem
+        LoadingItem,
+        NothingHere
     } ;

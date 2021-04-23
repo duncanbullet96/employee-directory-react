@@ -9,10 +9,16 @@
   "author": "Will Duncan",
   "license": "ISC",
   "dependencies": {
+    "activedirectory": "^0.7.2",
+    "activedirectory2": "^2.1.0",
+    "async": "^3.2.0",
     "body-parser": "^1.19.0",
+    "bunyan": "^1.8.15",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "ldapjs": "^2.2.4",
     "mysql2": "^2.2.5",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.2",
+    "underscore": "^1.13.1"
   }
 }

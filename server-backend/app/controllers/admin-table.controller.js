@@ -127,6 +127,7 @@ exports.deleteAll = (req, res) => {
     });
 };
 
+
 // find all published AdminTable
 exports.findAllPublished = (req, res) => {
   AdminTable.findAll({ where: { item_name: '' } })
