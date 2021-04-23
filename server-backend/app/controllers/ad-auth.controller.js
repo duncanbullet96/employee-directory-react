@@ -6,7 +6,7 @@ const config = { url: 'ldap://hciad3.heart.local',
 
 exports.authRequest = (req, res) => {
     const ad = new ActiveDirectory(config);
-    const username = req.body.username;
+    const username = req.body.username + domain;
     const password = req.body.password;
     ad.authenticate(username, password, function(err, auth) {
         if (err) {
@@ -21,7 +21,8 @@ exports.authRequest = (req, res) => {
         if (auth) {
             console.log('Authenticated!');
             res.send({
-                message: 'Auth successful'
+                message: 'Auth successful',
+                ldap_response_code: '0'
             })
         } else {
             console.log('Authentication failed!');

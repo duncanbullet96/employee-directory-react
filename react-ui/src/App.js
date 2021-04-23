@@ -37,6 +37,7 @@ class App extends Component {
     //this.onChildClick1 = this.onChildClick1.bind(this);
     this.editEmployee_onSuccess = this.editEmployee_onSuccess.bind(this);
     this.addEmployee_onSuccess = this.addEmployee_onSuccess.bind(this);
+    this.successfulLogin = this.successfulLogin.bind(this);
 
   }
 
@@ -67,6 +68,12 @@ class App extends Component {
   hideToast = () =>{
       this.setState({toastShow: false})
   };
+
+  successfulLogin = () => {
+    this.setState({
+      userLoggedIn: true
+    })
+  }
 
 
   
@@ -149,7 +156,7 @@ class App extends Component {
     else{
       return(
         <div className="login-div-main" >
-          <LoginScreen/>
+          <LoginScreen successfulLogin={this.successfulLogin}/>
         </div>
       )
     }

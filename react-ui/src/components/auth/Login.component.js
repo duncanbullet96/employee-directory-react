@@ -1,20 +1,54 @@
 import  react from "react";
 import {ReactComponent as HeartBeat} from '../site-components/svgs/heart-beat.svg';
 import './login-style.css';
+import ADAuthService from '../../services/auth.services';
 
 
 
 class LoginBox extends react.Component{
     constructor(props){
         super(props);
+        this.state={
+            username:'',
+            password:''
+        }
 
         this.attemptLogin = this.attemptLogin.bind(this);
+        this.onChangeUsername = this.onChangeUsername.bind(this);
+        this.onChangePassword = this.onChangePassword.bind(this);
     }
 
+    onChangeUsername(e){
+        this.setState({
+            username: e.target.value
+        });
+    };
+
+    onChangePassword(e){
+        this.setState({
+            password:e.target.value
+        });
+    };
     attemptLogin(e){
-        e.preventDefault();
-
-
+        var creds = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        //e.preventDefault();
+        console.log(this.state)
+       ADAuthService.authenticate(creds)
+       .then(Response =>{
+           console.log(Response);
+           if(Response.data.ldap_response_code == 0){
+               console.log('user successfully authenticated');
+               this.props.AuthSuccess();
+           }
+           else{
+               console.log('bad auth request')
+           }
+           
+       })
+ 
 
 
 
@@ -38,18 +72,18 @@ class LoginBox extends react.Component{
                         <form>
                             <div className="form-group">
                                 <label className="form-control-label">USERNAME</label>
-                                <input type="text" className="form-control"/>
+                                <input type="text" className="form-control" onChange={this.onChangeUsername}/>
                             </div>
                             <div className="form-group">
                                 <label className="form-control-label">PASSWORD</label>
-                                <input type="password" className="form-control" i/>
+                                <input type="password" className="form-control" onChange={this.onChangePassword}/>
                             </div>
 
                             <div className="col-lg-12 loginbttm">
                                 <div className="col-lg-6 login-btm login-text">
                                 </div>
                                 <div className="col-lg-6 login-btm login-button">
-                                    <button type="submit" onClick={this.attemptLogin} className="btn btn-outline-primary login-btn">LOGIN</button>
+                                    <button type="button" onClick={this.attemptLogin} className="btn btn-outline-primary login-btn">LOGIN</button>
                                 </div>
                             </div>
                         </form>
@@ -75,10 +109,16 @@ class LoginScreen extends react.Component{
             isLoading: true
         }
 
+        this.AuthSuccess = this.AuthSuccess.bind(this);
+
     }
 
     componentDidMount(){
         setTimeout(() => {this.setState({ isLoading: false })}, 1500);
+    }
+
+    AuthSuccess(){
+        this.props.successfulLogin();
     }
 
     render(){
@@ -94,7 +134,7 @@ class LoginScreen extends react.Component{
         }else{
             return(
                 <div className="parent-div">
-                   <LoginBox/>
+                   <LoginBox AuthSuccess={this.AuthSuccess} />
                 </div>
         
 
