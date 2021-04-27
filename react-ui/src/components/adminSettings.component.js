@@ -1,7 +1,7 @@
 import React from 'react';
 import GeneralSettings from './settings/GeneralSettings.component';
 import {AdvancedSettings} from './settings/AdvancedSettings.component';
-import {Button} from 'react-bootstrap'
+import {Button} from 'react-bootstrap';
 //import {Route, Switch} from 'react-router-dom';
 
 class AdminSettings extends React.Component{

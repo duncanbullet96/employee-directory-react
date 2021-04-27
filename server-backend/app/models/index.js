@@ -1,6 +1,7 @@
 const dbConfig = require("../config/db.config.js"); // pulls in the configuration data and stores in to a variable called dbConfig
 
 const Sequelize = require("sequelize"); //stores the sequelize modules as the variable Sequelize with a CAPITAL S DAMNIT
+const { DB } = require("../config/db.config.js");
 const sequelize = new Sequelize(                    //initialize a new Sequelize connection with the following parameters and store it as the variable sequelzie (lower case shhhh)
     dbConfig.DB,                                    // db name
     dbConfig.USER,                                  // db username
@@ -27,6 +28,8 @@ const db = {};
 db.Sequelize = Sequelize; //db.Sequelize is equal to the CAPITAL S Sequelize
 db.sequelize = sequelize;   // inverse 
 
+db.item_managment = require("./item-management.model.js")(sequelize, Sequelize);
+db.role_table = require("./role-table.model.js")(sequelize, Sequelize);
 db.admin_table = require("./admin-table.model.js")(sequelize, Sequelize);
 db.wp_participants_database = require("./model.js")(sequelize, Sequelize); //our db.wp_participants_database is equal to the model information from model.js 
                                                                             // aka this our scheme pull 

@@ -48,7 +48,61 @@
   margin-top: 20px;
 }
 
+<<<<<<< Updated upstream
 @keyframes App-logo-spin {
+=======
+.table-wrapper{
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+.subsetting-wrapper{
+  border:1.6px solid rgba(0,0,0,0.178);
+  border-radius:5px;
+  
+}
+
+.error-wrapper{
+  Margin-top:10%;
+}
+
+.nothing-wrapper{
+  margin-top: 1%;
+}
+
+.default-text{
+  color:#495057c9 !important;
+}
+
+
+.username{
+  color: White
+}
+
+
+#up-arrow{
+  top:0 !important;
+}
+
+
+#new-user-button{
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+
+}
+
+
+/* ********************************** Heart Beat Animation *************************** */
+.heart-beat-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 5;
+  animation: dash 3s linear infinite;
+}
+
+@keyframes dash {
+>>>>>>> Stashed changes
   from {
     transform: rotate(0deg);
   }

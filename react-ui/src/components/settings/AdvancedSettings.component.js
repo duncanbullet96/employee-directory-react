@@ -94,6 +94,97 @@ class LookupSettings extends React.Component{
     constructor(props){
         super(props);
 
+<<<<<<< Updated upstream
+=======
+    
+    componentDidMount(){
+        axios.get("http://localhost:8080/api/admin/departments")
+        .then(Response => {
+            console.log(Response);
+            this.setState({department_list: Response.data})
+            console.log('state:')
+            console.log(this.state)
+        })
+        .catch(error =>{
+            console.log(error);
+        })
+    }
+    
+
+    handleModalClose = () => {
+        this.setState({modalShow: false});
+    }
+    handleModalShow = () => {
+        this.setState({modalShow: true});
+        console.log(this.state)
+    }
+
+
+    refreshSettings = () =>{
+        axios.get("http://localhost:8080/api/admin/departments")
+        .then(Response=>{
+            console.log(Response);
+            this.setState({department_list: Response.data});
+        })
+    }
+
+    deleteItem = (props) => {
+        console.log(props);
+        AdminTableService.delete(props)
+        .then(Response =>{
+            console.log(Response);
+            this.refreshSettings();
+            
+        })
+        
+    }
+    render(){
+        return(
+            <div className="subsetting-wrapper" id="department-settings">
+            <h6 className="mt-2 ml-2">Department Field</h6>
+                <div className="modal-div container" id="modal-div">
+                    <InputModal showModal={this.state.modalShow} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
+                </div>
+                <div className="table-wrapper">
+                <div>
+                    <button className="btn btn-primary float-right mr-4 mb-3" onClick={this.handleModalShow}>Add New</button>
+                </div>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Department Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.department_list.map((department_list, i)=>{
+                                return(
+                                    <Fragment>
+                                        <tr key={i}>
+                                            <td>{department_list.id}</td>
+                                            <td>{department_list.item_value}</td>
+                                            <td><Button variant="link" onClick={this.deleteItem.bind(this,department_list.id)}><Trash size={24} color="red"/></Button></td>
+                                        </tr>
+                                    </Fragment>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
+            </div>
+        )
+    }
+}
+
+
+
+
+
+class LocationSettings extends React.Component{
+    constructor(props){
+        super(props)
+>>>>>>> Stashed changes
         this.state ={
             showModal : false,
             items: [],
@@ -146,6 +237,62 @@ class LookupSettings extends React.Component{
         })
         
     }
+<<<<<<< Updated upstream
+=======
+    render(){
+        return(
+            <div id="location-settings" style={{border:'1.6px solid rgba(0,0,0,0.178', borderRadius:'5px', marginTop:'1%'}}>
+            <h6 className="mt-2 ml-2">Location Field</h6>
+                <div className="modal-div container" id="modal-div">
+                    <InputModalLocations showModal={this.state.modalShow} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
+                </div>
+                <div className="table-wrapper">
+                <div>
+                    <button className="btn btn-primary float-right mr-4 mb-3" onClick={this.handleModalShow}>Add New</button>
+                </div>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Location Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.locations.map((currLocation, i)=>{
+                                return(
+                                    <Fragment>
+                                        <tr key={i}>
+                                            <td>{currLocation.id}</td>
+                                            <td>{currLocation.item_value}</td>
+                                            <td><Button variant="link"  onClick={this.deleteItem.bind(this,currLocation.id)}><Trash size={24} color="red"/></Button></td>
+                                        </tr>
+                                    </Fragment>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
+            </div>
+        )
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class LookupSettings extends React.Component{
+
+>>>>>>> Stashed changes
 
     render(){
         return(
