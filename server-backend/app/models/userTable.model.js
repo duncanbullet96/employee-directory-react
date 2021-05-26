@@ -7,13 +7,17 @@ module.exports = (sequelize, Sequelize) => {
         user_id: {
             type: Sequelize.STRING
         },
-        userName: {
+        person_name: {
+            type: Sequelize.STRING
+        },
+        username: {
+            type: Sequelize.STRING
+        },
+        password: {
             type: Sequelize.STRING
         },
         ad_auth: {
-            type: Sequelize.BOOLEAN,
-            allowNull: true, 
-            defaultValue: true
+            type: Sequelize.STRING
         },
         role: {
             type: Sequelize.STRING
