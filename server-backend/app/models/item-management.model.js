@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
         item_id: {
             type: Sequelize.STRING
         },
-        item_manager_id:{
+        item_owner_id:{
             type: Sequelize.STRING
         }
     });

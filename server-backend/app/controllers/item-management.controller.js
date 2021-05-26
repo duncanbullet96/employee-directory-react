@@ -1,12 +1,12 @@
 
 const db = require("../models");            //pulls in the /models/index.js file, we're pulling the "db" variable out of  
-const ItemManagement = db.item_managment;
+const ItemManagement = db.item_management;
 const Op = db.Sequelize.Op;
 
 exports.createItemAssignment = (req, res) => {
     const Mappings ={
         item_id: req.body.item_id,
-        item_manager_id: req.body.item_manager_id
+        item_owner_id: req.body.item_owner_id
     }
     ItemManagement.create(Mappings)
     .then(data => {
@@ -33,7 +33,7 @@ exports.getAssignments = (req, res) =>{
         admin_tables adt
     where 
         im.item_id = adt.id
-        and im.item_manager_id = ut.id
+        and im.item_owner_id = ut.id
     `)
     ItemManagement.sequelize.query(itemOwnerQuery, {type: ItemManagement.sequelize.QueryTypes.SELECT})
   .then(data=>{

@@ -395,6 +395,17 @@ class Mappings extends React.Component{
     }
 }
 
+class AddNewMappingsModal extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            item_id: '',
+            item_name:'',
+            item_owner:[],
+        }
+    }
+}
+
 class UserAccess extends React.Component{
 
     render(){
