@@ -5,7 +5,6 @@ const { urlencoded } = require('body-parser');
 
 
 
-
 const app = express();
 
 var corsOptions = {
@@ -22,7 +21,6 @@ app.use(urlencoded({extended: true}));
 //a simple route for us
 app.get("/", (req, res)=> {
     res.json({message: "This is the express server for the user phone list for the HC Intranet"})
-
 });
 
 
@@ -48,12 +46,6 @@ employee_db.sequelize.sync();
 
 const admin_db = require("./app/models");
 admin_db.sequelize.sync();
-//db.sequelize.sync({force: true}).then( () => {
-//    console.log("Drop and re-sync DB");
-//});
-
-const user_table = require("./app/models");
-user_table.sequelize.sync();
 //db.sequelize.sync({force: true}).then( () => {
 //    console.log("Drop and re-sync DB");
 //});
