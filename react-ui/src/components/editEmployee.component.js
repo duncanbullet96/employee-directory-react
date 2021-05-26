@@ -39,13 +39,13 @@ class EditEmp extends React.Component{
             last_name: '',
             phone: '',
             email: '',
-            department:'',
-            location:'',
+            department:''
 
 
         },
 
-        department_list:[]
+        department_list:[],
+        location_list:[]
     }
    // this.showToast = this.showToast.bind(this);
    // this.hideToast = this.hideToast.bind(this);
@@ -70,6 +70,17 @@ componentDidMount(){
         console.log(AxiosResponse);
         this.setState({
             department_list: AxiosResponse.data
+        })
+        console.log(this.state);
+    });
+
+    axios.get("http://localhost:8080/api/admin/locations",{
+        
+    })
+    .then(AxiosResponse =>{
+        console.log(AxiosResponse);
+        this.setState({
+            location_list:AxiosResponse.data
         })
         console.log(this.state);
     })
@@ -262,8 +273,16 @@ onRemove(e){
 
                             <div className="col-md-3">
                                 <label htmlFor="location" className="form-label">Location</label>
-                                <input type="text" className="form-control" id="location" 
-                                        value={ currentEmployee.location}onChange={this.onChangeLocation}/>
+                                    <Form.Control as="select" onChange={this.onChangeLocation.bind(this)} value={currentEmployee.location}>
+                                        {this.state.location_list.map((currLocation, i)=>{
+                                                                                    return(
+                                                                                        <Fragment>
+                                                                                            <option key={i} value={currLocation.item_value}>{currLocation.item_value}</option>
+                                                                                        </Fragment>
+                                                                                    )
+                                        })}
+
+                                    </Form.Control>
                             </div>
                         </div>
                         

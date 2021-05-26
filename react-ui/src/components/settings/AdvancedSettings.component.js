@@ -15,7 +15,7 @@ class InputModal extends React.Component {
         this.state={
             id:null,
             item_parent_collection: 'adv_settings',
-            item_name:'department_locations',
+            item_name:'departments',
             item_value: ''
 
         }
