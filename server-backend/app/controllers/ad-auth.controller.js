@@ -4,6 +4,26 @@ const config = { url: 'ldap://hciad3.heart.local',
                baseDN: 'OU=domain users,dc=heart,dc=local'
              };
 
+exports.userAdminAuthorization = (req, res) => {
+    const ad = new ActiveDirectory(config);
+    const username = req.body.username + domain;
+    const groupName = 'USR-EmpDir-Admin';
+
+    ad.isUserMemberOf(username, groupName, function(err, isMember){
+        if(err){
+            console.log('ERROR: '+JSON.stringify(err));
+            return;
+        }
+        console.log(username + ' isMemberOf ' + groupName + ': ' + isMember);
+    })
+};
+
+
+
+
+
+
+
 exports.authRequest = (req, res) => {
     const ad = new ActiveDirectory(config);
     const username = req.body.username + domain;

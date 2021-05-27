@@ -9,9 +9,6 @@ var adConfig = {
 };
 
 
-var username = 'wduncan@heart.local'
-var password = 'Bullet96!'
-
 
 var ad = new ActiveDirectory(adConfig);
 //do the authenitcation

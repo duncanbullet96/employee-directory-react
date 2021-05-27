@@ -3,10 +3,15 @@ module.exports = app => {
 
     var router = require("express").Router();
 
-    //submite new auth request
-    router.post("/", adAuth.authRequest);
+    //submit new authentication request
+    router.post("/authenticate", adAuth.authRequest);
+
+    //submit new authorization requst
+    router.post('/authorize', adAuth.userAdminAuthorization)
+
+
     
 
 
-app.use('/auth/login', router);
+app.use('/auth/', router);
 };
