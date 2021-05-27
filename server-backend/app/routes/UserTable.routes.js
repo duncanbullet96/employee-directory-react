@@ -8,6 +8,8 @@ module.exports = app => {
     
     //get all users
     router.get("/all", userTable.getAllUsers);
+
+    router.get("/:id", userTable.getUserByID);
     
 
 

@@ -3,14 +3,18 @@ module.exports = app => {
 
     var router = require("express").Router();
 
-    //create new user
+    //create item mangement mapping
     router.post("/new", ItemManagement.createItemAssignment);
     
-    //get all users
-    router.get("/all", ItemManagement.getAssignments);
+    //get mappings
+    router.get("/allID", ItemManagement.getAssignmentsWithID);
 
-    //get single role by id
+    router.get("/all", ItemManagement.getAssignments)
+
+    //get single mapping by id
     router.get("/:id", ItemManagement.getAssignmentByID);
+
+    router.delete("/:id", ItemManagement.deleteAssignmentbyID);
     
 
 

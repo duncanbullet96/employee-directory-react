@@ -24,9 +24,10 @@ exports.createItemAssignment = (req, res) => {
 exports.getAssignments = (req, res) =>{
     const itemOwnerQuery = (`
     select 
-        adt.id, 
+        im.id,
+        adt.id as user_id, 
         adt.item_value, 
-        ut.username as item_manager
+        (CONCAT(ut.username,' (',ut.person_name,')' )) as item_manager
     from
         item_management_s im,
         user_tables ut,
@@ -39,6 +40,15 @@ exports.getAssignments = (req, res) =>{
   .then(data=>{
     res.send(data);
   })
+}
+
+
+
+exports.getAssignmentsWithID = (req, res) =>{
+  ItemManagement.findAll()
+.then(data=>{
+  res.send(data);
+})
 }
 
 
@@ -56,3 +66,26 @@ const id = req.params.id;
             });
 };
 
+exports.deleteAssignmentbyID = (req, res) =>{
+  const id = req.params.id;
+
+    ItemManagement.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Item was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete EmpDB with id=${id}. Maybe EmpDB was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete EmpDB with id=" + id
+        });
+      });
+}

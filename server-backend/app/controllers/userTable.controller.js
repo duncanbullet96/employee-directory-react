@@ -52,4 +52,11 @@ exports.getAllUsers = (req, res) =>{
   })
 }
 
- 
+exports.getUserByID = (req, res) =>{
+  const id = req.params.id;
+
+  UserTable.findByPk(id)
+  .then(data =>{
+    res.send(data);
+  })
+ }

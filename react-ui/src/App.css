@@ -72,12 +72,19 @@
   color:#495057c9 !important;
 }
 
-
+#new-mapping-button{
+margin:1vh 1vh 1vh 1vh;
+}
 
 
 
 #up-arrow{
   top:0 !important;
+}
+
+
+.hidden{
+  display: none;
 }
 
 

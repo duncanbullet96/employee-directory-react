@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { Fragment } from "react";
-import {Tabs, Tab, Table, Button, Accordion, Card} from "react-bootstrap";
+import {Tabs, Tab, Table, Button, Accordion, Card, Spinner} from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import {Trash} from 'react-bootstrap-icons';
 import UserTableService from '../../services/user-table.services.js';
+import ItemManagementService from '../../services/item-management.services.js';
 
 
 class RoleList extends React.Component{
@@ -120,6 +121,7 @@ class AddNewUserModal extends React.Component{
             role: e.target.value
         })
     }
+
 
     refreshSettings = () =>{
         axios.get("http://localhost:8080/api/admin/roles/all")
@@ -340,9 +342,42 @@ class Mappings extends React.Component{
     constructor(props){
         super(props);
         this.state={
+            showNewMappingModal: false,
             user_mappings:[]
         }
+        this.refreshSettings = this.refreshSettings.bind(this);
     }
+
+    handleModalShow = () => {
+        this.setState({showNewMappingModal: true});
+        console.log(this.state)
+    }
+
+    handleModalClose = () => {
+        this.setState({showNewMappingModal: false});
+    }
+
+    refreshSettings = () =>{
+        axios.get("http://localhost:8080/api/admin/item_management/all")
+        .then(Response=>{
+            console.log(Response);
+            this.setState({
+                user_mappings:Response.data
+            });
+        })
+    }
+
+    deleteItem = (props) => {
+        console.log(props);
+        ItemManagementService.delete(props)
+        .then(Response =>{
+            console.log(Response);
+            this.refreshSettings();
+            
+        })
+    }
+
+    
 
     componentDidMount(){
         axios.get("http://localhost:8080/api/admin/item_management/all")
@@ -362,10 +397,10 @@ class Mappings extends React.Component{
         return(
             <div id="user-settings-div" className="settings-table">
                 <div className="modal-div container" id="modal-div">
-                    <AddNewUserModal showModal={this.state.showNewUserModal} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
+                    <AddNewMappingsModal showModal={this.state.showNewMappingModal} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
                 </div>
                 <div style={{float: 'right'}}>
-                        <Button id="new-user-button" className="btn btn-primary" onClick={this.handleModalShow}>Add New Mapping</Button>
+                        <Button id="new-mapping-button" className="btn btn-primary" onClick={this.handleModalShow}>Add New Mapping</Button>
                 </div>
                 <Table bordered hover>
                         <thead>
@@ -384,6 +419,7 @@ class Mappings extends React.Component{
                                             <td>{currMapping.id}</td>
                                             <td>{currMapping.item_value}</td>
                                             <td>{currMapping.item_manager}</td>
+                                            <td><Button variant="link"  onClick={this.deleteItem.bind(this,currMapping.id)}><Trash size={24} color="red"/></Button></td>
                                             </tr>
                                     </Fragment>
                                 )
@@ -401,9 +437,142 @@ class AddNewMappingsModal extends React.Component{
         this.state = {
             item_id: '',
             item_name:'',
+            item_value:'',
             item_owner:[],
+            items_available:[],
+            users_available:[],
+
+            hasBeenValidated:false,
+            validated_item_value:'',
+            validated_item_owner:''
         }
+
+        this.onChangeItem = this.onChangeItem.bind(this);
+        this.onChangeItemOwnership = this.onChangeItemOwnership.bind(this);
+        this.onSubmitItemOwnership = this.onSubmitItemOwnership.bind(this);
+        this.validateAssignment = this.validateAssignment.bind(this)
     }
+
+
+    
+componentDidMount(){
+    axios.get("http://localhost:8080/api/admin/departments")
+    .then(Response => {
+        console.log(Response);
+        this.setState({items_available: Response.data})
+    })
+    .catch(error =>{
+        console.log(error);
+    });
+    axios.get("http://localhost:8080/api/admin/users/all")
+    .then(Response => {
+        console.log(Response);
+        this.setState({users_available: Response.data})
+    })
+    .catch(error =>{
+        console.log(error);
+    });
+};
+
+refreshSettings = () =>{
+    this.props.refreshSettings();
+}
+
+onChangeItem(e){
+    this.setState({
+        item_id:e.target.value, 
+    });
+    this.validateAssignment();
+}
+
+onChangeItemOwnership(e){
+    this.setState({
+        item_owner:e.target.value
+    })
+    this.validateAssignment();
+}
+
+
+validateAssignment(){
+    if(this.state.item_id && this.state.item_owner){
+        this.setState({
+            hasBeenValidated:true
+        })
+    }
+}
+
+onSubmitItemOwnership(){
+    var data = {
+        item_id: this.state.item_id,
+        item_owner_id :this.state.item_owner
+    };
+    console.log(data)
+         ItemManagementService.create(data)
+        .then(Response=>{
+            this.props.refreshSettings();
+            this.props.handleClose();
+            this.setState({
+                item_id:Response.data.item_id,
+                item_owner:Response.data.item_owner_id
+            })
+
+        });
+
+
+}
+
+
+render(){
+return(
+    <Modal show={this.props.showModal} onHide={this.props.handleClose} size="lg">
+        <Modal.Header closeButton>
+                <Modal.Title>
+                    Add New Mapping Assignment
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div>
+                    <form>
+                        <div className="form-row">
+                            <div className="col-md-4">
+                                <label htmlFor="full_name">Item</label>
+                                <Form.Control as="select" onChange={this.onChangeItem}>
+                                    <option className="default-text">Please Select a Item</option>
+                                {this.state.items_available.map((currItem, i)=>{
+                                    return(
+                                        <Fragment>
+                                                <option key={i} value={currItem.id}>{currItem.item_value}</option>
+                                        </Fragment>
+                                    )
+                                })}
+                                </Form.Control>
+                            </div>
+
+                            <div className="col-md-4" style={{paddingLeft:'2vw'}}>
+                                <label htmlFor="full_name">Item Ownership</label>
+                                <Form.Control as="select" onChange={this.onChangeItemOwnership}>
+                                    <option className="default-text">Please Select a User</option>
+                                {this.state.users_available.map((currUser, i)=>{
+                                    return(
+                                        <Fragment>
+                                                <option key={i} value={currUser.id} >{currUser.person_name}</option>
+                                        </Fragment>
+                                    )
+                                })}
+                                </Form.Control>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button varient="secondary" disabled={!this.state.hasBeenValidated} onClick={this.onSubmitItemOwnership}>Add</Button>
+            </Modal.Footer>
+    </Modal>
+)
+}
 }
 
 class UserAccess extends React.Component{
