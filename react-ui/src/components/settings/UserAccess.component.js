@@ -295,7 +295,6 @@ class UserSettings extends React.Component{
     render(){
         return(
             <div id="user-settings-div" className="settings-table">
-                <button onClick={this.log}>Refresh</button>
                 <div className="modal-div container" id="modal-div">
                     <AddNewUserModal showModal={this.state.showNewUserModal} handleClose={this.handleModalClose} refreshSettings={this.refreshSettings} />
                 </div>

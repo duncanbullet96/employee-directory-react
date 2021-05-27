@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import EmployeeDirectoryService from '../services/empDir.services';
 
 
-class AddEmp extends React.Component{
-    constructor(props){
+class AddEmp extends React.Component {
+    constructor(props) {
         super(props);
         this.onChangeFirstName = this.onChangeFirstName.bind(this);
         this.onChangeLastName = this.onChangeLastName.bind(this);
@@ -27,104 +27,104 @@ class AddEmp extends React.Component{
             last_name: '',
             phone: '',
             email: '',
-            department:'',
-            location:'',
-            title:'',
+            department: '',
+            location: '',
+            title: '',
 
             sumitted: false,
 
-            department_list:[],
-            location_list:[]
-            
+            department_list: [],
+            location_list: []
+
 
         }
 
     }///end constructor
 
-    componentDidMount(){
+    componentDidMount() {
         this.fetchDepartments();
         this.fetchLocations();
 
     }
 
 
-    fetchDepartments = () =>{
-        axios.get("http://localhost:8080/api/admin/departments",{
-            params:{
-                "item_parent_collection":"adv_settings",
-                "item_name":"departments"
+    fetchDepartments = () => {
+        axios.get("http://localhost:8080/api/admin/departments", {
+            params: {
+                "item_parent_collection": "adv_settings",
+                "item_name": "departments"
             }
         })
-        .then(Response=>{
-            console.log(Response);
-            this.setState({
-                department_list: Response.data
+            .then(Response => {
+                console.log(Response);
+                this.setState({
+                    department_list: Response.data
+                })
+                console.log(this.state);
             })
-            console.log(this.state);
-        })
     }
 
-    fetchLocations = () =>{
-        axios.get("http://localhost:8080/api/admin/locations",{
-            params:{
-                "item_parent_collection":"adv_settings",
-                "item_name":"locations"
+    fetchLocations = () => {
+        axios.get("http://localhost:8080/api/admin/locations", {
+            params: {
+                "item_parent_collection": "adv_settings",
+                "item_name": "locations"
             }
         })
-        .then(Response=>{
-            console.log(Response);
-            this.setState({
-                location_list: Response.data
+            .then(Response => {
+                console.log(Response);
+                this.setState({
+                    location_list: Response.data
+                })
+                console.log(this.state);
             })
-            console.log(this.state);
-        })
 
     }
 
-    onChangeFirstName(e){
+    onChangeFirstName(e) {
         this.setState({
             first_name: e.target.value
         });
     }
 
-    onChangeLastName(e){
+    onChangeLastName(e) {
         this.setState({
             last_name: e.target.value
         });
     }
 
 
-    onChangePhone(e){
+    onChangePhone(e) {
         this.setState({
             phone: e.target.value
         });
     }
 
-    onChangeEmail(e){
+    onChangeEmail(e) {
         this.setState({
             email: e.target.value
         });
     }
 
-    onChangeDepartment(e){
+    onChangeDepartment(e) {
         this.setState({
             department: e.target.value
         });
     }
 
-    onChangeLocation(e){
+    onChangeLocation(e) {
         this.setState({
             location: e.target.value
         });
     }
 
-    onChangeTitle(e){
+    onChangeTitle(e) {
         this.setState({
             title: e.target.value
         });
     }
 
-    onSubmit(){
+    onSubmit() {
         var data = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
@@ -136,30 +136,30 @@ class AddEmp extends React.Component{
         };
 
         EmployeeDirectoryService.create(data)
-        .then(response => {
-            this.setState({
-                id: response.data.id, 
-                first_name: response.data.first_name,
-                last_name: response.data.last_name,
-                phone: response.data.phone,
-                email: response.data.email,
-                department:response.data.department,
-                location: response.data.location,
-                title: response.data.title,
-                sumitted: true
-            });
-            console.log(response.data);
-            window.postMessage("success!");
-            this.props.addEmployee_onSuccess();
-            this.props.history.push('/');
+            .then(response => {
+                this.setState({
+                    id: response.data.id,
+                    first_name: response.data.first_name,
+                    last_name: response.data.last_name,
+                    phone: response.data.phone,
+                    email: response.data.email,
+                    department: response.data.department,
+                    location: response.data.location,
+                    title: response.data.title,
+                    sumitted: true
+                });
+                console.log(response.data);
+                window.postMessage("success!");
+                this.props.addEmployee_onSuccess();
+                this.props.history.push('/');
 
-        })
-        .catch(e => {
-            console.log(e);
-        })
+            })
+            .catch(e => {
+                console.log(e);
+            })
     }
-    
-    listDepartments = () =>{
+
+    listDepartments = () => {
         console.log(this.state.department_list)
 
 
@@ -167,66 +167,66 @@ class AddEmp extends React.Component{
     }
 
 
-    render(){
+    render() {
 
-        return(
+        return (
             <div className="edit-form container mt-3">
                 <h4>Add New Employee</h4>
-                <br/>
+                <br />
                 <Form>
                     <div className="form-row">
                         <div className="form-group col-md-4">
-                            <label htmlFor="first_name">First Name<span style={{color: 'red'}}>*</span></label>
-                                        <input 
-                                            type="text"
-                                            className="form-control"
-                                            id="first_name"
-                                            value={this.state.first_name}
-                                            onChange={this.onChangeFirstName}
-                                        />
+                            <label htmlFor="first_name">First Name<span style={{ color: 'red' }}>*</span></label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="first_name"
+                                value={this.state.first_name}
+                                onChange={this.onChangeFirstName}
+                            />
                         </div>
                         <div className="form-group col-md-4">
                             <label htmlFor="lastname">Last Name</label>
-                                        <input 
-                                            type="text"
-                                            className="form-control"
-                                            id="lastname"
-                                            value={this.state.last_name}
-                                            onChange={this.onChangeLastName}
-                                        />
-                        
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="lastname"
+                                value={this.state.last_name}
+                                onChange={this.onChangeLastName}
+                            />
+
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col-md-2">
                             <label htmlFor="phone">Phone</label>
-                                        <input 
-                                            type="text"
-                                            className="form-control"
-                                            id="phone"
-                                            value={this.state.phone}
-                                            onChange={this.onChangePhone}
-                                        />
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="phone"
+                                value={this.state.phone}
+                                onChange={this.onChangePhone}
+                            />
                         </div>
                         <div className="form-group col-md-3">
-                        <label htmlFor="email">Email</label>
-                                    <input 
-                                        type="text"
-                                        className="form-control"
-                                        id="email"
-                                        value={this.state.email}
-                                        onChange={this.onChangeEmail}
-                                    />
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="email"
+                                value={this.state.email}
+                                onChange={this.onChangeEmail}
+                            />
                         </div>
                         <div className="form-group col-md-3">
                             <label htmlFor="title">Title</label>
-                                        <input 
-                                            type="text"
-                                            className="form-control"
-                                            id="title"
-                                            value={this.state.title}
-                                            onChange={this.onChangeTitle}
-                                        />
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="title"
+                                value={this.state.title}
+                                onChange={this.onChangeTitle}
+                            />
                         </div>
                     </div>
                     <div className="form-row">
@@ -234,33 +234,34 @@ class AddEmp extends React.Component{
                             <label htmlFor="department">Department</label>
                             <Form.Control as="select" onChange={this.onChangeDepartment}>
                                 <option className="default-text">Please Select a Department</option>
-                            {this.state.department_list.map((currItem, i)=>{
-                                return(
-                                    <Fragment>
+                                {this.state.department_list.map((currItem, i) => {
+                                    return (
+                                        <Fragment>
                                             <option key={i} value={currItem.item_value} >{currItem.item_value}</option>
-                                    </Fragment>
-                                )
-                            })}
-                        </Form.Control>
+                                        </Fragment>
+                                    )
+                                })}
+                            </Form.Control>
                         </div>
                         <div className="form-group col-md-4">
                             <label htmlFor="locations">Locations</label>
-                                
-                                <Form.Control as="select" onChange={this.onChangeLocation}>
-                                {this.state.location_list.map((currLocation, i)=>{
-                                    return(
+
+                            <Form.Control as="select" onChange={this.onChangeLocation}>
+                            <option className="default-text">Please Select a Location</option>
+                                {this.state.location_list.map((currLocation, i) => {
+                                    return (
                                         <Fragment>
-                                                <option key={i} value={currLocation.item_value} >{currLocation.item_value}</option>
+                                            <option key={i} value={currLocation.item_value} >{currLocation.item_value}</option>
                                         </Fragment>
                                     )
                                 })}
                             </Form.Control>
                         </div>
                     </div>
-                    <br/>
+                    <br />
                     <div class="form-group">
                         <button type="button" to="/" onClick={this.onSubmit} className="btn btn-primary mr-3">Save</button>
-                            <Link type="button" to="/" class="btn btn-secondary">Cancel</Link>
+                        <Link type="button" to="/" class="btn btn-secondary">Cancel</Link>
                     </div>
                 </Form>
 
@@ -268,7 +269,7 @@ class AddEmp extends React.Component{
             </div>
         )
     }
-    
+
 
 
 
