@@ -2,6 +2,10 @@ import  react from "react";
 import {ReactComponent as HeartBeat} from '../site-components/svgs/heart-beat.svg';
 import './login-style.css';
 import ADAuthService from '../../services/auth.services';
+import UserTableService from '../../services/user-table.services';
+import axios from 'axios';
+import { ResponsiveEmbed } from "react-bootstrap";
+import { error } from "jquery";
 
 
 
@@ -10,7 +14,9 @@ class LoginBox extends react.Component{
         super(props);
         this.state={
             username:'',
-            password:''
+            password:'',
+            role:[],
+            user:''
         }
 
         this.attemptLogin = this.attemptLogin.bind(this);
@@ -29,6 +35,28 @@ class LoginBox extends react.Component{
             password:e.target.value
         });
     };
+
+    validateRole = (creds) =>{
+        UserTableService.getUserByUsername(creds)
+        .then(Response =>{
+            console.log(Response.data[0].role);
+
+            if(Response){
+                this.setState({
+                    role: Response.data[0].role,
+                    user: Response.data[0].username
+                })
+
+                console.log(this.state.role);
+                this.props.RoleValid(this.state.role);
+                this.props.AuthSuccess(this.state.user);
+
+
+            }
+
+        })
+    }
+
     attemptLogin(e){
         var creds = {
             username: this.state.username,
@@ -41,7 +69,10 @@ class LoginBox extends react.Component{
            console.log(Response);
            if(Response.data.ldap_response_code == 0){
                console.log('user successfully authenticated');
-               this.props.AuthSuccess();
+
+
+               
+               this.validateRole(creds.username);
            }
            else{
                console.log('bad auth request')
@@ -82,8 +113,8 @@ class LoginBox extends react.Component{
                             <div className="col-lg-12 loginbttm">
                                 <div className="col-lg-6 login-btm login-text">
                                 </div>
-                                <div className="col-lg-6 login-btm login-button">
-                                    <button type="button" onClick={this.attemptLogin} className="btn btn-outline-primary login-btn">LOGIN</button>
+                                <div className="login-button-div">
+                                    <button type="button" onClick={this.attemptLogin} className="login-button">LOGIN</button>
                                 </div>
                             </div>
                         </form>
@@ -106,19 +137,28 @@ class LoginScreen extends react.Component{
     constructor(props){
         super(props);
         this.state={
-            isLoading: true
+            isLoading: true,
+            loginMode:'',
         }
 
         this.AuthSuccess = this.AuthSuccess.bind(this);
+        this.RoleValid = this.RoleValid.bind(this);
 
     }
 
     componentDidMount(){
-        setTimeout(() => {this.setState({ isLoading: false })}, 1500);
+        setTimeout(() => {this.setState({ isLoading: false })}, 50);
     }
 
-    AuthSuccess(){
-        this.props.successfulLogin();
+    RoleValid = (childData) =>{
+        console.log('child data: '+ childData);
+        this.setState({
+            loginMode : childData
+        });
+    }
+
+    AuthSuccess = (user) =>{
+        this.props.successfulLogin(this.state.loginMode, user);
     }
 
     render(){
@@ -134,7 +174,7 @@ class LoginScreen extends react.Component{
         }else{
             return(
                 <div className="parent-div">
-                   <LoginBox AuthSuccess={this.AuthSuccess} />
+                   <LoginBox AuthSuccess={this.AuthSuccess} RoleValid={this.RoleValid} />
                 </div>
         
 

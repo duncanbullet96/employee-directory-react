@@ -30,6 +30,7 @@ class App extends Component {
       toastValue: '',
       renderApp: 0,
       userLoggedIn: false,
+      role:'',
       currentUser: null,
       userToken: null
     }
@@ -71,17 +72,21 @@ class App extends Component {
     this.setState({ toastShow: false })
   };
 
-  successfulLogin = () => {
+  successfulLogin = (loginMode, loggedInUser) => {
     this.setState({
-      userLoggedIn: true
+      userLoggedIn: true,
+      role : loginMode,
+      currentUser: loggedInUser
     })
+    console.log(this.state)
   }
 
 
 
 
   render() {
-    if (this.state.userLoggedIn) {
+    /////////////////////////////////////////admin mode///////////////////////////////////////////////////
+    if (this.state.userLoggedIn && this.state.role == '1') {
       return (
         <div style={{
           width: 'auto',
@@ -106,6 +111,86 @@ class App extends Component {
                   <Dropdown.Menu>
                     <Dropdown.Item>
                       <Link to={"/admin"} className="nav-link" style={{ color: 'black' }}>Admin</Link>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </li>
+            </div>
+          </nav>
+          <div
+            id="toast-div"
+            aria-live="polite"
+            aria-atomic="true"
+            style={{
+              position: 'relative',
+              minHeight: '5%'
+            }}>
+            <Toast
+              style={{ position: 'absolute', top: 0, right: 25 }}
+              show={this.state.toastShow}
+              delay={this.state.toastTimeout}
+              autohide
+              onClose={this.hideToast}
+              animation={true}>
+              <Toast.Header>
+                <strong className="mr-auto">HCI Employee Directory</strong>
+              </Toast.Header>
+              <Toast.Body>
+                {this.state.toastValue}
+              </Toast.Body>
+            </Toast>
+          </div>
+          <div className="parent-div">
+
+            <Switch>
+              <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} />} />
+              <Route path="/admin"
+                render={
+                  (props) => (<AdminSettings {...this.state}/>
+                    )}/>
+
+              <Route path="/add"
+                render={
+                  (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
+                  )} />
+
+              <Route path="/empdir/:id"
+                render={
+                  (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
+                  )} />
+            </Switch>
+          </div>
+        </div>  //ending div
+      );
+    }
+
+
+    ///////////////////////////////////////standard mode//////////////////////////////////////////////////
+    else if(this.state.userLoggedIn && this.state.role == '3'){
+      return (
+        <div style={{
+          width: 'auto',
+          height: '100%'
+        }}>
+          <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <a href="/empdir" className="navbar-brand">Home</a>
+            <div className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <Link to={"/empdir"} className="nav-link">List All</Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/add"} className="nav-link">Add New</Link>
+              </li>
+            </div>
+            <div className="navbar-nav float-right">
+              <li className="nav-item">
+                <Dropdown>
+                  <Dropdown.Toggle id="gear-dropdown">
+                    <Gear />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item>
+                        Logout
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

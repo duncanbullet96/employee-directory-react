@@ -6,10 +6,7 @@ module.exports = app => {
     //submit new authentication request
     router.post("/authenticate", adAuth.authRequest);
 
-    //submit new authorization requst
-    router.post('/authorize', adAuth.userAdminAuthorization)
-
-
+    //submit user authZ 
     
 
 

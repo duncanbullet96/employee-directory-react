@@ -1,3 +1,4 @@
+const { user_table } = require("../models");
 const db = require("../models");            //pulls in the /models/index.js file, we're pulling the "db" variable out of  
 const UserTable = db.user_table;
 const Op = db.Sequelize.Op;
@@ -59,4 +60,23 @@ exports.getUserByID = (req, res) =>{
   .then(data =>{
     res.send(data);
   })
+ }
+
+
+ exports.findUserByUsername = (req,res)=>{
+    UserTable.findAll({
+      attributes: ['role','username'],
+      where: {
+        username: req.params.data
+      }
+    })
+    .then(data =>{
+      res.send(data)
+    })
+    .catch(err => {
+      res.status(500).send({
+      message:
+          err.message || "error"
+      });
+  });
  }
