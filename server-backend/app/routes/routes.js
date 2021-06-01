@@ -7,7 +7,7 @@ module.exports = app => {
     router.post("/", EmpDB.create);
     
     //retreive all tutorials 
-    router.get("/", EmpDB.findAll);
+    router.get("/", EmpDB.findAllFormatted);
 
     // Retrieve all published Tutorials
     router.get("/published", EmpDB.findAllPublished);

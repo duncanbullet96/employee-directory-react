@@ -17,6 +17,7 @@ const EmployeeProps = props =>(
         <td>{props.employee.first_name}</td>
         <td>{props.employee.last_name}</td>
         <td>{props.employee.phone}</td>
+        <td>{props.employee.alt_phone}</td>
         <td>{props.employee.email}</td>
         <td>{props.employee.department}</td>
         <td>{props.employee.location}</td>
@@ -47,7 +48,7 @@ export default class listEmployees extends Component {
 
     
     
-   async componentDidMount(error){
+        componentDidMount(error){
         this.timeout = setTimeout ( () => {
             this.setState({isLoading: false});
             console.log(this.state)
@@ -62,15 +63,16 @@ export default class listEmployees extends Component {
                 employees : Response.data,
                 isLoading: false
             })
+            
         })
         .catch(error => {
             this.setState({
                 apiError: true,
-                errorMessage: 'API Error',
+                errorMessage: 'API Error' + JSON.stringify(error),
                 isLoading: false
             })
         })
-    }
+    };
 
     listOfEmployees() {
         return this.state.employees.map(function (currEmployee, i) { 
@@ -125,6 +127,7 @@ export default class listEmployees extends Component {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Phone</th>
+                            <th>Alt Phone</th>
                             <th>Email</th>
                             <th>Department</th>
                             <th>Location</th>

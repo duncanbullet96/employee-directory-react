@@ -16,13 +16,16 @@ module.exports = (sequelize, Sequelize) => {
         phone: {
             type: Sequelize.STRING
         },
+        alt_phone:{
+            type: Sequelize.STRING
+        },
         email: {
             type: Sequelize.STRING
         },
-        department: {
+        department_id: {
             type: Sequelize.STRING
         },
-        location: {
+        location_id: {
             type: Sequelize.STRING
         },
         title: {

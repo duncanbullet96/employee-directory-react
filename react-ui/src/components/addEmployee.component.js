@@ -20,19 +20,26 @@ class AddEmp extends React.Component {
         this.onChangeLocation = this.onChangeLocation.bind(this);
         this.onChangeTitle = this.onChangeTitle.bind(this);
 
+        this.onChangeAltPhoneCheck = this.onChangeAltPhoneCheck.bind(this);
+        this.onChangeAltPhone = this.onChangeAltPhone.bind(this);
+        this.onChangeAltPhoneType = this.onChangeAltPhoneType.bind(this);
+
 
         this.state = {
+            showAltPhone: false,
+
+
             id: null,
             first_name: '',
             last_name: '',
             phone: '',
+            alt_phone:'',
+            alt_phone_type:'',
             email: '',
-            department: '',
-            location: '',
+            department_id: '',
+            location_id: '',
             title: '',
-
             sumitted: false,
-
             department_list: [],
             location_list: []
 
@@ -100,6 +107,25 @@ class AddEmp extends React.Component {
         });
     }
 
+    onChangeAltPhoneCheck(e) {
+        this.setState({
+            showAltPhone: e.target.checked
+        })
+        console.log(this.state.showAltPhone)
+    }
+
+    onChangeAltPhone(e){
+        this.setState({
+            alt_phone: e.target.value
+        })
+    }
+
+    onChangeAltPhoneType(e){
+        this.setState({
+            alt_phone_type: e.target.value
+        })
+    }
+
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
@@ -108,13 +134,14 @@ class AddEmp extends React.Component {
 
     onChangeDepartment(e) {
         this.setState({
-            department: e.target.value
+            department_id: e.target.value
         });
+        console.log(this.state.department_id)
     }
 
     onChangeLocation(e) {
         this.setState({
-            location: e.target.value
+            location_id: e.target.value
         });
     }
 
@@ -130,8 +157,8 @@ class AddEmp extends React.Component {
             last_name: this.state.last_name,
             phone: this.state.phone,
             email: this.state.email,
-            department: this.state.department,
-            location: this.state.location,
+            department_id: this.state.department_id,
+            location_id: this.state.location_id,
             title: this.state.title
         };
 
@@ -143,8 +170,8 @@ class AddEmp extends React.Component {
                     last_name: response.data.last_name,
                     phone: response.data.phone,
                     email: response.data.email,
-                    department: response.data.department,
-                    location: response.data.location,
+                    department_id: response.data.department_id,
+                    location_id: response.data.location_id,
                     title: response.data.title,
                     sumitted: true
                 });
@@ -230,6 +257,22 @@ class AddEmp extends React.Component {
                         </div>
                     </div>
                     <div className="form-row">
+                        <div className="form-group col-md-2">
+                            <Form.Check type="checkbox" label="Alternate Phone" onChange={this.onChangeAltPhoneCheck} />
+                        </div>
+                    </div>
+                    <div className={(this.state.showAltPhone ? "form-row" : "hidden")}>
+                        <div className="form-group col-md-2">
+                            <label htmlFor="title"> Alternate Phone Number</label>
+                            <Form.Control as="input" onChange={this.onChangeAltPhone} />
+                        </div>
+                        <div className="form-group col-md-2">
+                        <label htmlFor="title">Type</label>
+                            <Form.Control as="select" onChange={this.onChangeAltPhoneType}>
+                            </Form.Control>
+                        </div>
+                    </div>
+                    <div className="form-row">
                         <div className="form-group col-md-4">
                             <label htmlFor="department">Department</label>
                             <Form.Control as="select" onChange={this.onChangeDepartment}>
@@ -237,7 +280,7 @@ class AddEmp extends React.Component {
                                 {this.state.department_list.map((currItem, i) => {
                                     return (
                                         <Fragment>
-                                            <option key={i} value={currItem.item_value} >{currItem.item_value}</option>
+                                            <option key={i} value={currItem.id} label={currItem.item_value} ></option>
                                         </Fragment>
                                     )
                                 })}
@@ -247,11 +290,11 @@ class AddEmp extends React.Component {
                             <label htmlFor="locations">Locations</label>
 
                             <Form.Control as="select" onChange={this.onChangeLocation}>
-                            <option className="default-text">Please Select a Location</option>
+                                <option className="default-text">Please Select a Location</option>
                                 {this.state.location_list.map((currLocation, i) => {
                                     return (
                                         <Fragment>
-                                            <option key={i} value={currLocation.item_value} >{currLocation.item_value}</option>
+                                            <option key={i} value={currLocation.id} label={currLocation.item_value} ></option>
                                         </Fragment>
                                     )
                                 })}

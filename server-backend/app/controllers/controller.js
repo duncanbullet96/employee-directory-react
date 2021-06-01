@@ -20,9 +20,10 @@ exports.create = (req, res) => {
     first_name: req.body.first_name, 
     last_name: req.body.last_name ,
     phone: req.body.phone ,
+    alt_phone: req.body.alt_phone,
     email: req.body.email ,
-    department: req.body.department ,
-    location: req.body.location ,
+    department_id: req.body.department_id ,
+    location_id: req.body.location_id ,
     title: req.body.title ,
   };
 
@@ -38,6 +39,10 @@ exports.create = (req, res) => {
       });
     });
 };
+
+
+
+
 
 // Retrieve all EmpDBs from the database.
 exports.findAll = (req, res) => {
@@ -55,6 +60,41 @@ exports.findAll = (req, res) => {
       });
     });
 };
+
+
+
+// pretty find all - formatted
+exports.findAllFormatted = (req, res) =>{
+  const formattedUserQuery = (`
+  select 
+  pd.id, 
+      pd.first_name, 
+      pd.last_name,
+      pd.phone, 
+      pd.alt_phone,
+      pd.email,
+      pd.title,
+      adt1.item_value as 'department',
+      adt2.item_value as 'location',
+      pd.createdAt, 
+      pd.updatedAt
+  from
+      admin_tables adt1,
+      admin_tables adt2,
+      wp_participants_databases pd
+  where 
+       pd.department_id = adt1.id
+      and pd.location_id = adt2.id
+
+  `)
+  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
+.then(data=>{
+  res.send(data);
+})
+}
+
+
+
 
 // Find a single EmpDB with an id
 exports.findOne = (req, res) => {
