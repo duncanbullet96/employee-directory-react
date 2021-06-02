@@ -6,6 +6,7 @@ import React, { Fragment } from "react";
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import EmployeeDirectoryService from '../services/empDir.services';
+import FieldTableService from '../services/field-table.services.js';
 
 
 class AddEmp extends React.Component {
@@ -41,7 +42,8 @@ class AddEmp extends React.Component {
             title: '',
             sumitted: false,
             department_list: [],
-            location_list: []
+            location_list: [],
+            alt_phone_list:[]
 
 
         }
@@ -112,6 +114,17 @@ class AddEmp extends React.Component {
             showAltPhone: e.target.checked
         })
         console.log(this.state.showAltPhone)
+        this.fetchAltPhoneTypes();
+    }
+
+    fetchAltPhoneTypes = () =>{
+        const field_name = 'alt_phone'
+        FieldTableService.getFieldDatabyName(field_name)
+        .then(Response =>{
+            this.setState({
+                alt_phone_list : Response.data
+            })
+        })
     }
 
     onChangeAltPhone(e){
@@ -156,6 +169,8 @@ class AddEmp extends React.Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             phone: this.state.phone,
+            alt_phone:this.state.alt_phone,
+            alt_phone_type:this.state.alt_phone_type,
             email: this.state.email,
             department_id: this.state.department_id,
             location_id: this.state.location_id,
@@ -269,6 +284,14 @@ class AddEmp extends React.Component {
                         <div className="form-group col-md-2">
                         <label htmlFor="title">Type</label>
                             <Form.Control as="select" onChange={this.onChangeAltPhoneType}>
+                                <option>Select Type</option>
+                            {this.state.alt_phone_list.map((currItem, i) => {
+                                    return (
+                                        <Fragment>
+                                            <option key={i} value={currItem.id} label={currItem.field_value} ></option>
+                                        </Fragment>
+                                    )
+                                })}
                             </Form.Control>
                         </div>
                     </div>
