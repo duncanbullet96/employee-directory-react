@@ -35,3 +35,12 @@ exports.getAllFields = (req, res) =>{
 }
 
 
+exports.findFieldByName = (req, res) =>{
+    const field_name = req.params.data
+    FieldsTable.findAll({
+        where : {field_name : field_name}
+    })
+    .then(data =>{
+        res.json(data);
+    })
+}

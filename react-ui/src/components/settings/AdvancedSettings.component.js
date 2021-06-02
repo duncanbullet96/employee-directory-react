@@ -4,7 +4,8 @@ import { Tabs, Tab, Table, Button, Accordion, Card } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import AdminTableService from '../../services/admin-table.services';
-import { Trash } from 'react-bootstrap-icons';
+import { PencilSquare, Plus, PlusSquare, Trash } from 'react-bootstrap-icons';
+import FieldTableService from '../../services/field-table.services.js';
 
 class InputModal extends React.Component {
     constructor(props) {
@@ -162,9 +163,20 @@ class FieldSettings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            newField: false,
+            showAddButton: false,
+            newItemValue: '',
             fieldList: [],
-            selected_field: ''
+            selected_field: '',
+            selected_field_data: [],
+            field_id:''
         }
+
+        this.handleFieldSelect = this.handleFieldSelect.bind(this);
+        this.createItem = this.createItem.bind(this);
+        this.showAddButton = this.showAddButton.bind(this);
+        this.saveNewItem = this.saveNewItem.bind(this);
+        this.refreshSettings = this.refreshSettings.bind(this);
     }
 
     componentDidMount() {
@@ -174,17 +186,101 @@ class FieldSettings extends React.Component {
                     fieldList: Response.data
                 })
             })
+
     }
 
-    fetchFieldSettings(){
-        axios.get("http://localhost:8080/api/admin/fields/alt_phone")
+    fetchFieldSettings = () => {
+        const data = this.state.selected_field
+        FieldTableService.getFieldDatabyName(data)
+            .then(Response => {
+                this.setState({
+                    selected_field_data: Response.data
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
     }
 
-    onChangeFieldSelect(e) {
+    onChangeFieldSelect = (e) => {
+        console.log(e.target.value);
         this.setState({
             selected_field: e.target.value
         })
+        console.log(e)
 
+    }
+
+    handleFieldSelect = (e) => {
+        console.log(this.state.selected_field);
+        this.fetchFieldSettings();
+        this.showAddButton();
+    }
+
+    deleteItem = (props) => {
+        console.log(props);
+        const id = props;
+        const data = this.state.selected_field
+        FieldTableService.delete(data, id);
+    }
+
+    showAddButton = () => {
+        this.setState({
+            showAddButton: true
+        })
+    }
+
+    createItem = () => {
+        this.setState({
+            newField: true
+        })
+    }
+
+    onChangeNewItemInput = (e) => {
+        this.setState({
+            newItemValue: e.target.value
+        })
+    }
+
+    getFieldID = () =>{
+        const name = this.state.selected_field;
+        FieldTableService.getFieldByName(name)
+        .then(Response =>{
+            this.setState({
+                field_id: Response.data[0].id
+            })
+        })
+    }
+
+    saveNewItem = (e) => {
+
+        const data = {
+            field_value : this.state.newItemValue,
+            parent_field_id: this.state.field_id,
+            parent_field_name:this.state.selected_field
+        }
+        const field = this.state.selected_field
+        FieldTableService.create(field, data)
+        .then(Response=>{
+            console.log(Response.data)
+        })
+        
+        this.refreshSettings()
+    }
+
+
+    refreshSettings = () =>{
+        const data = this.state.selected_field
+        FieldTableService.getFieldDatabyName(data)
+            .then(Response => {
+                this.setState({
+                    selected_field_data: Response.data
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     render() {
@@ -194,16 +290,66 @@ class FieldSettings extends React.Component {
                     <div className="form-group col-md-2">
                         <label>Please select a Field</label>
                         <Form.Control as="select" onChange={this.onChangeFieldSelect}>
-                            <option className="default-text"></option>
+                            <option className="default-text" value='null'></option>
                             {this.state.fieldList.map((currField, i) => {
                                 return (
                                     <Fragment>
-                                        <option key={i} value={currField.id} >{currField.field_name}</option>
+                                        <option key={i} value={currField.field_name}>{currField.field_name}</option>
                                     </Fragment>
                                 )
                             })}
                         </Form.Control>
+                        <Button style={{ marginTop: '1vh' }} variant="primary" onClick={this.handleFieldSelect}>Go</Button>
                     </div>
+                </div>
+                <div>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Row ID</th>
+                                <th>Parent Field</th>
+                                <th>Field Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.selected_field_data.map((currData, i) => {
+                                return (
+                                    <Fragment>
+                                        <tr key={i}>
+                                            <td>{currData.id}</td>
+                                            <td>{currData.parent_field_name}</td>
+                                            <td>{currData.field_value}</td>
+                                            <td>
+                                                <Button variant="link" onClick={this.deleteItem.bind(this, currData.id)}>
+                                                    <Trash size={24} color="red" />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    </Fragment>
+                                )
+                            })}
+
+                            <td></td>
+                            <td></td>
+
+                            <td className={(this.state.newField ? "null" : "hidden")}>
+                                <Form.Control as="input" onChange={this.onChangeNewItemInput} />
+                            </td>
+
+                            <td className={(this.state.newField ? "null" : "hidden")}>
+                                <Button variant="primary" onClick={this.saveNewItem}>Save</Button>
+                            </td>
+                        </tbody>
+                    </Table>
+                    <div className={(this.state.showAddButton ? "null" : "hidden")}>
+                        <Button variant="outline-primary" onClick={this.createItem}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
+                            </svg>
+                        </Button>
+                    </div>
+
                 </div>
             </div>
         )
@@ -302,9 +448,6 @@ class DepartmentSettings extends React.Component {
         )
     }
 }
-
-
-
 
 
 class LocationSettings extends React.Component {

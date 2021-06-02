@@ -33,7 +33,7 @@ db.sequelize = sequelize;   // inverse
 
 //fields
 db.fieldsTable = require("./fieldsTable.model.js")(sequelize, Sequelize);
-db.field_AltPhone = require("./fields/field-altPhone.model.js")(sequelize, Sequelize);
+db.fieldData = require("./fields/field-data.model.js")(sequelize, Sequelize);
 
 
 

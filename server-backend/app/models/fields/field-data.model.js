@@ -3,16 +3,20 @@
 const { sequelize, Sequelize } = require("sequelize");
 
 module.exports = (sequelize, Sequelize) => {
-    const fieldAltPhone = sequelize.define("fieldAltPhone_", {
-        master_field_id: {
+    const fieldData = sequelize.define("fieldData_", {
+        parent_field_id:{
             type: Sequelize.STRING
         },
-        alt_phone_type:{
+        parent_field_name: {
+            type: Sequelize.STRING
+        },
+        field_value:{
             type: Sequelize.STRING
         },
 
     });
 
-return fieldAltPhone;
+
+return fieldData;
 
 };
