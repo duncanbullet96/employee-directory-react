@@ -31,7 +31,7 @@ db.admin_table = require("./admin-table.model.js")(sequelize, Sequelize);
 db.user_table = require("./userTable.model.js")(sequelize, Sequelize);
 db.role_table = require("./role-table.model.js")(sequelize, Sequelize);
 db.item_management = require("./item-management.model.js")(sequelize, Sequelize);
-db.wp_participants_database = require("./model.js")(sequelize, Sequelize); //our db.wp_participants_database is equal to the model information from model.js 
+db.inventory_list = require("./inventory-table.js")(sequelize, Sequelize); //our db.wp_participants_database is equal to the model information from model.js 
                                                                             // aka this our scheme pull 
 
 module.exports = db;

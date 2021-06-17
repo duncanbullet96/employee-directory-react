@@ -1,6 +1,6 @@
 //import editEmployee from './editEmployee.component'
 //import Toast from 'react-bootstrap/Toast';
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import axios from "axios";
 import {PencilSquare } from 'react-bootstrap-icons';
 import {Link} from 'react-router-dom';
@@ -14,7 +14,7 @@ import {ErrorPage, LoadingItem, NothingHere} from './site-components/site-utils.
 
 const EmployeeProps = props =>(
     <tr>
-        <td>{props.employee.first_name}</td>
+        <td>{props.itemList.item_name}</td>
         <td>{props.employee.last_name}</td>
         <td>{props.employee.phone}</td>
         <td>{props.employee.email}</td>
@@ -37,7 +37,7 @@ export default class listEmployees extends Component {
             apiError: null,
             errorMessage: '',
             loading: true,
-            employees: [],
+            itemList: [],
 
 
         }
@@ -54,12 +54,12 @@ export default class listEmployees extends Component {
         }, 10);
         
         //console.log("ListEmployee did mount")
-        axios.get("http://localhost:8080/api/empdir/")
+        axios.get("http://localhost:8080/api/items/all")
         .then(Response => {
             console.log(Response);
             if(Response.status == '200')
             this.setState({
-                employees : Response.data,
+                itemList : Response.data,
                 isLoading: false
             })
         })
@@ -71,13 +71,6 @@ export default class listEmployees extends Component {
             })
         })
     }
-
-    listOfEmployees() {
-        return this.state.employees.map(function (currEmployee, i) { 
-            return <EmployeeProps employee={currEmployee} key={i}/>
-           
-        })
-    };
 
     editEmployee() {
         return(
@@ -105,7 +98,7 @@ export default class listEmployees extends Component {
                     <ErrorPage errorMessage={this.state.errorMessage}/>
                 </div>
             )
-        } else if(this.state.employees.length === 0){
+        } else if(this.state.itemList.length === 0){
             return(
                 <div className="nothing-wrapper" >
                     <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"}/>
@@ -114,7 +107,7 @@ export default class listEmployees extends Component {
         }
         return(
             <div className="container mt-3">
-                <h3>Employees</h3>
+                <h3>Inventory</h3>
                 <br/>
                 <div>
                     <Link to={"/add"}  className="btn btn-primary float-right mb-3 ">Add New</Link>
@@ -122,17 +115,27 @@ export default class listEmployees extends Component {
                 <table className="table table-striped" style={{ marginTop: 20 }} >
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Department</th>
+                            <th>Item Name</th>
+                            <th>Category</th>
                             <th>Location</th>
-                            <th>Edit</th>
+                            <th>QTY</th>
+                            <th>Entered By</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.listOfEmployees()}
+                    {this.state.itemList.map((currItem, i)=>{
+                                return(
+                                    <Fragment>
+                                        <tr key={i}>
+                                            <td>{currItem.item_name}</td>
+                                            <td>{currItem.category_name}</td>
+                                            <td>{currItem.location_name}</td>
+                                            <td>{currItem.qty}</td>
+                                            <td>{currItem.created_by}</td>
+                                        </tr>
+                                    </Fragment>
+                                )
+                            })}
                     </tbody>
                 </table>
             </div>

@@ -4,7 +4,7 @@ module.exports = {
     HOST: "intranet-hci",
     USER: "node_service",
     PASSWORD: "Milo1414",
-    DB:"opcon", 
+    DB:"inventory_management", 
     dialect: "mysql",
     pool: { //sql paramters for the connection
         max: 50,

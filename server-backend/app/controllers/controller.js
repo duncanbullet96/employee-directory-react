@@ -1,5 +1,5 @@
 const db = require("../models");            //pulls in the /models/index.js file, we're pulling the "db" variable out of  
-const EmpDB = db.wp_participants_database;
+const InventoryDB = db.inventory_list;
 const Op = db.Sequelize.Op;
 
 
@@ -7,7 +7,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new EmpDB
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.title) {
+  if (!req.body.item_name) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -15,19 +15,16 @@ exports.create = (req, res) => {
   }
 
   // Create a EmpDB
-  const employee = {
-    private_id: req.body.private_id,
-    first_name: req.body.first_name, 
-    last_name: req.body.last_name ,
-    phone: req.body.phone ,
-    email: req.body.email ,
-    department: req.body.department ,
-    location: req.body.location ,
-    title: req.body.title ,
+  const item = {
+    item_name : req.body.item_name, 
+    category_name : req.body.category_name, 
+    location_name : req.body.location_name, 
+    qty : req.body.qty,
+    created_by : req.body.created_by
   };
 
   // Save EmpDB in the database
-  EmpDB.create(employee)
+  InventoryDB.create(item)
     .then(data => {
       res.send(data);
     })
@@ -41,10 +38,8 @@ exports.create = (req, res) => {
 
 // Retrieve all EmpDBs from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-  EmpDB.findAll({ where: condition })
+  InventoryDB.findAll()
     .then(data => {
       res.send(data);
     })
@@ -60,7 +55,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.findByPk(id)
+  InventoryDB.findByPk(id)
     .then(data => {
       res.send(data);
     })
@@ -75,7 +70,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.update(req.body, {
+  InventoryDB.update(req.body, {
     where: { id: id }
   })
     .then(num => {
@@ -100,7 +95,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.destroy({
+  InventoryDB.destroy({
     where: { id: id }
   })
     .then(num => {
@@ -123,7 +118,7 @@ exports.delete = (req, res) => {
 
 // Delete all EmpDBs from the database.
 exports.deleteAll = (req, res) => {
-  EmpDB.destroy({
+  InventoryDB.destroy({
     where: {},
     truncate: false
   })
@@ -140,7 +135,7 @@ exports.deleteAll = (req, res) => {
 
 // find all published EmpDB
 exports.findAllPublished = (req, res) => {
-  EmpDB.findAll({ where: { published: true } })
+  InventoryDB.findAll({ where: { published: true } })
     .then(data => {
       res.send(data);
     })

@@ -81,7 +81,6 @@ class App extends Component {
 
 
   render() {
-    if (this.state.userLoggedIn) {
       return (
         <div style={{
           width: 'auto',
@@ -155,14 +154,6 @@ class App extends Component {
         </div>  //ending div
       );
     }
-    else {
-      return (
-        <div className="login-div-main" >
-          <LoginScreen successfulLogin={this.successfulLogin} />
-        </div>
-      )
-    }
-  }
 
 }/// Closing Bracket for App Component *********************************************
 
