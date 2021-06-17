@@ -62,6 +62,7 @@ export default class listEmployees extends Component {
 
 
         this.getUserID();
+        this.fetchEmployees();
 
     };
 
