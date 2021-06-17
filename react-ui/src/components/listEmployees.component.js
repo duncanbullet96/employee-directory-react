@@ -2,17 +2,18 @@
 //import Toast from 'react-bootstrap/Toast';
 import React, { Component } from "react";
 import axios from "axios";
-import {PencilSquare } from 'react-bootstrap-icons';
-import {Link} from 'react-router-dom';
+import { PencilSquare } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 
-import {ErrorPage, LoadingItem, NothingHere} from './site-components/site-utils.component'
-
-
-
+import { ErrorPage, LoadingItem, NothingHere } from './site-components/site-utils.component'
+import { error } from "jquery";
 
 
 
-const EmployeeProps = props =>(
+
+
+
+const EmployeeProps = props => (
     <tr>
         <td>{props.employee.first_name}</td>
         <td>{props.employee.last_name}</td>
@@ -22,10 +23,10 @@ const EmployeeProps = props =>(
         <td>{props.employee.department}</td>
         <td>{props.employee.location}</td>
         <td>
-            <Link to={"/empdir/" + props.employee.id}><PencilSquare/></Link>
+            <Link to={"/empdir/" + props.employee.id}><PencilSquare /></Link>
         </td>
     </tr>
-    
+
 );
 
 
@@ -38,51 +39,108 @@ export default class listEmployees extends Component {
             apiError: null,
             errorMessage: '',
             loading: true,
+
+            currentUser: this.props.currentUser,
+            currentUserID: '',
+            UserMapping: [],
+
             employees: [],
 
 
         }
-        
+        this.getUserMappings = this.getUserMappings.bind(this);
+
     }
 
 
-    
-    
-        componentDidMount(error){
-        this.timeout = setTimeout ( () => {
-            this.setState({isLoading: false});
+
+    componentDidMount(error) {
+        this.timeout = setTimeout(() => {
+            this.setState({ isLoading: false });
             console.log(this.state)
         }, 10);
-        
-        //console.log("ListEmployee did mount")
-        axios.get("http://localhost:8080/api/empdir/")
-        .then(Response => {
-            console.log(Response);
-            if(Response.status == '200')
-            this.setState({
-                employees : Response.data,
-                isLoading: false
-            })
-            
-        })
-        .catch(error => {
-            this.setState({
-                apiError: true,
-                errorMessage: 'API Error' + JSON.stringify(error),
-                isLoading: false
-            })
-        })
+
+
+        this.getUserID();
+
     };
 
+    getUserID = () => {
+
+        axios.get(`http://localhost:8080/api/admin/users/${this.state.currentUser}`)
+            .then(Response => {
+                this.setState({
+                    currentUserID: Response.data[0].id
+                })
+                console.log('user mappigs start here')
+                this.getUserMappings();
+            })
+            .catch(error => {
+                console.log(error)
+            });
+        console.log('start here')
+    }
+
+    getUserMappings = () => {
+        console.log(this.state.currentUserID)
+        axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.state.currentUserID}`)
+            .then(Response => {
+                console.log(Response.data)
+                this.setState({
+                    UserMapping: Response.data
+                })
+
+            });
+        console.log("this.state.UserMapping");
+        console.log(this.state.UserMapping)
+        this.consoleUserMappings();
+
+    }
+
+consoleUserMappings = () =>{
+    const UserMappingArray = this.state.UserMapping;
+
+    console.log('usermappingarray')
+    console.log(UserMappingArray);
+}
+
+    
+
+    fetchEmployees = () => {
+
+        axios.get(`http://localhost:8080/api/empdir/list/15`)
+            .then(Response => {
+                console.log(Response);
+                if (Response.status == '200')
+                    this.setState({
+                        employees: Response.data,
+                        isLoading: false
+                    })
+
+            })
+            .catch(error => {
+                this.setState({
+                    apiError: true,
+                    errorMessage: 'API Error' + JSON.stringify(error),
+                    isLoading: false
+                })
+            })
+    }
+
+
+
+
+
+
     listOfEmployees() {
-        return this.state.employees.map(function (currEmployee, i) { 
-            return <EmployeeProps employee={currEmployee} key={i}/>
-           
+        return this.state.employees.map(function (currEmployee, i) {
+            return <EmployeeProps employee={currEmployee} key={i} />
+
         })
     };
 
     editEmployee() {
-        return(
+        return (
             <tr>
                 <td><input value={this.listOfEmployees()}></input></td>
             </tr>
@@ -91,35 +149,35 @@ export default class listEmployees extends Component {
 
 
 
-    render(){
-        if(this.state.isLoading){
-            return( 
-            <div style={{textAlign:"center"}}>
-                <LoadingItem loading={this.state.isLoading} positon='center'/>
-            </div>
+    render() {
+        if (this.state.isLoading) {
+            return (
+                <div style={{ textAlign: "center" }}>
+                    <LoadingItem loading={this.state.isLoading} positon='center' />
+                </div>
 
             )
         }
 
-        if(this.state.apiError){
-            return(
+        if (this.state.apiError) {
+            return (
                 <div className="error-wrapper" >
-                    <ErrorPage errorMessage={this.state.errorMessage}/>
+                    <ErrorPage errorMessage={this.state.errorMessage} />
                 </div>
             )
-        } else if(this.state.employees.length === 0){
-            return(
+        } else if (this.state.employees.length === 0) {
+            return (
                 <div className="nothing-wrapper" >
-                    <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"}/>
+                    <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"} />
                 </div>
             )
         }
-        return(
+        return (
             <div className="container mt-3">
                 <h3>Employees</h3>
-                <br/>
+                <br />
                 <div>
-                    <Link to={"/add"}  className="btn btn-primary float-right mb-3 ">Add New</Link>
+                    <Link to={"/add"} className="btn btn-primary float-right mb-3 ">Add New</Link>
                 </div>
                 <table className="table table-striped" style={{ marginTop: 20 }} >
                     <thead>

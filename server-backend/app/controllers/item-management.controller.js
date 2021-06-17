@@ -66,6 +66,7 @@ const id = req.params.id;
             });
 };
 
+
 exports.deleteAssignmentbyID = (req, res) =>{
   const id = req.params.id;
 
@@ -88,4 +89,22 @@ exports.deleteAssignmentbyID = (req, res) =>{
           message: "Could not delete EmpDB with id=" + id
         });
       });
+}
+
+
+
+exports.getAssignmentsForUser = (req, res) =>{
+  const owner_id = req.params.user_id;
+
+  ItemManagement.findAll({
+    attributes: ['id'],
+    where : {
+      item_owner_id : owner_id
+    }
+  })
+  .then(data =>{
+    res.json(data)
+  })
+
+  
 }

@@ -15,6 +15,9 @@ module.exports = app => {
     router.get("/:id", ItemManagement.getAssignmentByID);
 
     router.delete("/:id", ItemManagement.deleteAssignmentbyID);
+
+    //get the item assignments for the user id
+    router.get("/ownership/:user_id", ItemManagement.getAssignmentsForUser);
     
 
 

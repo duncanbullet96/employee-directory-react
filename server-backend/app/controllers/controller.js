@@ -96,6 +96,42 @@ exports.findAllFormatted = (req, res) =>{
 
 
 
+// pretty find all - formatted
+exports.findbyDepartment = (req, res) =>{
+  const data = req.params.id;
+  const location_id = req.body.location_id;
+  const formattedUserQuery = (`
+  select 
+  pd.id, 
+      pd.first_name, 
+      pd.last_name,
+      pd.phone, 
+      pd.alt_phone,
+      pd.email,
+      pd.title,
+      adt1.item_value as 'department',
+      adt2.item_value as 'location',
+      pd.createdAt, 
+      pd.updatedAt
+  from
+      admin_tables adt1,
+      admin_tables adt2,
+      wp_participants_databases pd
+  where 
+      adt1.id = ${data}
+      and pd.department_id = adt1.id
+      and pd.location_id = adt2.id
+
+  `)
+  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
+.then(data=>{
+  res.send(data);
+})
+}
+
+
+
+
 // Find a single EmpDB with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;

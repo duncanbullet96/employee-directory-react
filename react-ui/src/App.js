@@ -143,7 +143,7 @@ class App extends Component {
           <div className="parent-div">
 
             <Switch>
-              <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} />} />
+              <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} {...this.state} />} />
               <Route path="/admin"
                 render={
                   (props) => (<AdminSettings {...this.state}/>
