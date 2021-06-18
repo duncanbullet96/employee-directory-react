@@ -16,7 +16,13 @@ module.exports = (sequelize, Sequelize) => {
         qty: {
             type: Sequelize.STRING
         },
+        trackit_id: {
+            type: Sequelize.STRING
+        },
         created_by: {
+            type: Sequelize.STRING
+        },
+        comment: {
             type: Sequelize.STRING
         }
         

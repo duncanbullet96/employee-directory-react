@@ -5,8 +5,8 @@ import { Switch, Route, Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 
-import ListEmployees from "./components/listEmployees.component";
-import AddEmp from './components/addEmployee.component';
+import ListIventory from "./components/listInventory.component";
+import AddInventory from './components/addInventory.component';
 import EditEmp from './components/editEmployee.component';
 import AdminSettings from './components/adminSettings.component';
 import { LoginScreen } from './components/auth/Login.component';
@@ -137,12 +137,12 @@ class App extends Component {
           <div className="parent-div">
 
             <Switch>
-              <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} />} />
+              <Route exact path={["/", "/inventory/all"]} render={(props) => <ListIventory {...props} />} />
               <Route exact path="/admin" component={AdminSettings} />
 
               <Route path="/add"
                 render={
-                  (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
+                  (props) => (<AddInventory {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
                   )} />
 
               <Route path="/empdir/:id"

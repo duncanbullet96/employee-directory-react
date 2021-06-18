@@ -10,7 +10,7 @@ module.exports = app => {
     router.get("/", AdminTable.findAll);
 
     // Retrieve all departments
-    router.get("/departments", AdminTable.findDepartments);
+    router.get("/category", AdminTable.findCategory);
 
     //retrieve all locations
     router.get("/locations", AdminTable.findLocations);

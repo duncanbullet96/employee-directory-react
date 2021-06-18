@@ -142,11 +142,11 @@ exports.findAllPublished = (req, res) => {
     });
 };
 
-exports.findDepartments = (req, res) =>{
+exports.findCategory = (req, res) =>{
   AdminTable.findAll({
     attributes: ['id','item_value'],
     where: {item_parent_collection: 'adv_settings',
-      item_name:'departments'}
+      item_name:'category'}
   })
   .then(data=>{
     res.send(data);
