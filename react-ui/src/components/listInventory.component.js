@@ -3,7 +3,7 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
 import {PencilSquare } from 'react-bootstrap-icons';
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import {ErrorPage, LoadingItem, NothingHere} from './site-components/site-utils.component'
 
@@ -117,6 +117,10 @@ export default class listEmployees extends Component {
                                             <td>{currItem.qty}</td>
                                             <td>{currItem.trackit_id}</td>
                                             <td>{currItem.created_by}</td>
+                                            <td>
+                                                <Link to={`/edit/${currItem.id}`} >
+                                                    <PencilSquare/>
+                                                </Link></td>
                                         </tr>
                                     </Fragment>
                                 )

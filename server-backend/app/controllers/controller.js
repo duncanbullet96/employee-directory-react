@@ -20,6 +20,9 @@ exports.create = (req, res) => {
     category_name : req.body.category_name, 
     location_name : req.body.location_name, 
     qty : req.body.qty,
+    trackit_id: req.body.trackit_id,
+    comment: req.body.comment,
+    status: req.body.status,
     created_by : req.body.created_by
   };
 

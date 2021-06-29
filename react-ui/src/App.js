@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 
 import ListIventory from "./components/listInventory.component";
 import AddInventory from './components/addInventory.component';
-import EditEmp from './components/editEmployee.component';
+import EditInventory from './components/editInventory.component';
 import AdminSettings from './components/adminSettings.component';
 import { LoginScreen } from './components/auth/Login.component';
 
@@ -87,10 +87,10 @@ class App extends Component {
           height: '100%'
         }}>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <a href="/empdir" className="navbar-brand">Home</a>
+            <a href="/inventory/all" className="navbar-brand">Home</a>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to={"/empdir"} className="nav-link">List All</Link>
+                <Link to={"/inventory/all"} className="nav-link">List All</Link>
               </li>
               <li className="nav-item">
                 <Link to={"/add"} className="nav-link">Add New</Link>
@@ -139,15 +139,14 @@ class App extends Component {
             <Switch>
               <Route exact path={["/", "/inventory/all"]} render={(props) => <ListIventory {...props} />} />
               <Route exact path="/admin" component={AdminSettings} />
-
               <Route path="/add"
                 render={
                   (props) => (<AddInventory {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
                   )} />
 
-              <Route path="/empdir/:id"
+              <Route path="/edit/:id"
                 render={
-                  (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
+                  (props) => (<EditInventory {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
                   )} />
             </Switch>
           </div>

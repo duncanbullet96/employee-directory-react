@@ -1,156 +1,158 @@
-//import { Link } from 'react-router-dom';
-//import axios from "../../../old/backend/node_modules/axios";
-
-import axios from "axios";
 import React, { Fragment } from "react";
-import { Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import InventoryService from '../services/inventory.services';
+import { Link } from 'react-router-dom';
+import EmployeeDirectoryService from '../services/inventory.services';
+import { Form } from 'react-bootstrap';
+import axios from 'axios';
+import { InputModal } from './site-components/InputModal.component'
+import inventoryService from "../services/inventory.services";
 
 
-class AddEmp extends React.Component {
+
+
+
+
+
+
+class EditInventory extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
+
         this.onChangeItemName = this.onChangeItemName.bind(this);
+        // this.onChangeDepartment = this.onChangeDepartment(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.onChangeCategory = this.onChangeCategory.bind(this);
-        this.onChangeLocation = this.onChangeLocation.bind(this);
+        this.onRemove = this.onRemove.bind(this);
+
+
+
 
 
         this.state = {
-            id: null,
-            item_name: '',
-            category: '',
-            location: '',
-            qty: '',
-            trackit_number:'',
-            comment:'',
-            created_by:'',
+            showModal: false,
+            stateRender: null,
+            currentItem: {
+                id: null,
+                item_name: '',
+                category: '',
+                location: '',
+                qty: '',
+                trackit_number:'',
+                comment:'',
+                created_by:'',
 
 
-            sumitted: false,
+            },
 
             category_list: [],
             location_list: []
-
-
         }
+        // this.showToast = this.showToast.bind(this);
+        // this.hideToast = this.hideToast.bind(this);
 
-    }///end constructor
+
+    }
+
+    handleModalClose = () => {
+        this.setState({ showModal: false })
+    }
 
     componentDidMount() {
-        this.fetchCategory();
-        this.fetchLocations();
-
-    }
-
-
-    fetchCategory = () => {
-        axios.get("http://localhost:8080/api/admin/category", {
-            params: {
-                "item_parent_collection": "adv_settings",
-                "item_name": "category"
-            }
+        var item_id = this.props.match.params.id
+        axios.get(`http://localhost:8080/api/${item_id}`)
+        .then(Response =>{
+            this.setState({
+                currentItem: Response.data
+            })
         })
-            .then(Response => {
-                console.log(Response);
+        //console.log("editEmployee did mount")
+        axios.get("http://localhost:8080/api/admin/category")
+            .then(AxiosResponse => {
+                console.log(AxiosResponse);
                 this.setState({
-                    category_list: Response.data
+                    category_list: AxiosResponse.data
                 })
                 console.log(this.state);
-            })
-    }
+            });
 
-    fetchLocations = () => {
         axios.get("http://localhost:8080/api/admin/locations", {
-            params: {
-                "item_parent_collection": "adv_settings",
-                "item_name": "locations"
-            }
+
         })
-            .then(Response => {
-                console.log(Response);
+            .then(AxiosResponse => {
+                console.log(AxiosResponse);
                 this.setState({
-                    location_list: Response.data
+                    location_list: AxiosResponse.data
                 })
                 console.log(this.state);
             })
-
     }
 
     onChangeItemName(e) {
-        this.setState({
-            item_name: e.target.value
-        });
+        const item_name = e.target.value
+
+        this.setState(function (prevState) {
+            return {
+                currentItem: {
+                    ...prevState.currentItem,
+                    item_name: item_name
+                }
+            }
+        })
     }
 
-    onChangeCategory(e) {
-        this.setState({
-            category: e.target.value
-        });
-    }
-
-    onChangeLocation(e) {
-        this.setState({
-            location: e.target.value
-        });
-    }
-
-    onChangeQty(e) {
-        this.setState({
-            qty: e.target.value
-        });
-    }
-
-    onChangeTrackit(e) {
-        this.setState({
-            trackit_number: e.target.value
-        });
-    }
-
-
-    onSubmit() {
-        var data = {
-            item_name: this.state.item_name,
-            category_name: this.state.category,
-            location_name: this.state.location,
-            qty: this.state.qty,
-            trackit_id:this.state.trackit_number,
-            comment: this.state.comment,
-            status: this.state.status,
-            created_by: this.state.created_by
-        };
-
-        InventoryService.create(data)
+    onSubmit(e) {
+        EmployeeDirectoryService.update(
+            this.state.currentEmployee.id,
+            this.state.currentEmployee
+        )
             .then(response => {
-                this.setState({
-                    id: response.data.id,
-                    item_name: response.data.item_name,
-                    category_name: response.data.category_name,
-                    location_name: response.data.location_name,
-                    qty: response.data.qty,
-                    trackit_id: response.data.trackit_id,
-                    comment: response.data.comment,
-                    status: response.data.status,
-                    created_by: response.data.created_by
-                });
                 console.log(response.data);
-                window.postMessage("success!");
-                this.props.addEmployee_onSuccess();
-                this.props.history.push('/');
+                this.setState({
+                    message: "Updated Successfully",
+                });
+                this.props.editEmployee_onSuccess();
+                this.props.history.push('/empdir')
 
             })
             .catch(e => {
                 console.log(e);
             })
+
+    }
+
+    onRemove(e) {
+        if (window.confirm('Are you sure you want to remove this item?')) {
+            inventoryService.delete(this.state.currentItem.id)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(e => {
+                    console.log(e);
+                })
+                this.props.history.push('/inventory/all')
+        }
+        else {
+            //null
+        }
+
+    }
+
+    onSuccess = () => {
+        console.log("onSuccess activated from Child")
+        this.props.editEmployee_onSuccess()
+
+    }
+
+    onEditDepartment = () => {
+        console.log('input modal function activated')
+        this.setState({ showModal: true })
     }
 
 
-    render() {
 
+    render() {
+        const { currentItem } = this.state
         return (
             <div className="edit-form container mt-3">
-                <h4>Add New Inventory Item</h4>
+                <h4>Edit Inventory Item</h4>
                 <br />
                 <Form>
                     <div className="form-row">
@@ -160,7 +162,7 @@ class AddEmp extends React.Component {
                                 type="text"
                                 className="form-control"
                                 id="item_name"
-                                value={this.state.item_name}
+                                value={currentItem.item_name}
                                 onChange={this.onChangeItemName}
                             />
                         </div>
@@ -168,8 +170,7 @@ class AddEmp extends React.Component {
                     <div className="form-row">
                         <div className="form-group col-md-4">
                             <label htmlFor="category">Category</label>
-                            <Form.Control as="select" onChange={this.onChangeCategory}>
-                                <option className="default-text">Please Select a Category</option>
+                            <Form.Control as="select" onChange={this.onChangeCategory} value={currentItem.category}>
                                 {this.state.category_list.map((currItem, i) => {
                                     return (
                                         <Fragment>
@@ -181,9 +182,7 @@ class AddEmp extends React.Component {
                         </div>
                         <div className="form-group col-md-4">
                             <label htmlFor="locations">Location</label>
-
-                            <Form.Control as="select" onChange={this.onChangeLocation}>
-                            <option className="default-text">Please Select a Location</option>
+                            <Form.Control as="select" onChange={this.onChangeLocation} value={currentItem.location}>
                                 {this.state.location_list.map((currLocation, i) => {
                                     return (
                                         <Fragment>
@@ -220,18 +219,15 @@ class AddEmp extends React.Component {
                     <div class="form-group">
                         <button type="button" to="/" onClick={this.onSubmit} className="btn btn-primary mr-3">Save</button>
                         <Link type="button" to="/" class="btn btn-secondary">Cancel</Link>
+                        <div className="btn-row">
+                            <br />
+                            <button type="submit" onClick={this.onRemove} className="btn btn-danger">Delete</button>
+                        </div>
                     </div>
                 </Form>
-
-
             </div>
         )
     }
+}
+export default EditInventory;
 
-
-
-
-
-}//ending component
-
-export default AddEmp;

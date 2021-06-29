@@ -1,8 +1,8 @@
 import http from "../http-common";
 
-class EmployeeDirectoryService {
+class InventoryService {
     getAll() {
-        return http.get("/empDir")
+        return http.get("/items/all")
     }
 
     get(id) {
@@ -10,7 +10,7 @@ class EmployeeDirectoryService {
     }
 
     create(data) {
-        return http.post("/empDir", data);
+        return http.post("/items/create", data);
     }
 
     update(id, data) {
@@ -18,7 +18,7 @@ class EmployeeDirectoryService {
     }
 
     delete(id) {
-        return http.delete(`/empDir/${id}`);
+        return http.delete(`/${id}`);
     }
 
     deleteAll() {
@@ -31,4 +31,4 @@ class EmployeeDirectoryService {
 
 }
 
-export default new EmployeeDirectoryService();
+export default new InventoryService();

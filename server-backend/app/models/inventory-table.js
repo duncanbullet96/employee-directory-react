@@ -19,6 +19,9 @@ module.exports = (sequelize, Sequelize) => {
         trackit_id: {
             type: Sequelize.STRING
         },
+        status: {
+            type: Sequelize.STRING
+        },
         created_by: {
             type: Sequelize.STRING
         },
