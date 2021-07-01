@@ -47,8 +47,6 @@ class EditEmp extends React.Component {
             department_list: [],
             location_list: []
         }
-        // this.showToast = this.showToast.bind(this);
-        // this.hideToast = this.hideToast.bind(this);
 
 
     }
@@ -59,7 +57,6 @@ class EditEmp extends React.Component {
 
     componentDidMount() {
         this.getEmployee(this.props.match.params.id);
-        //console.log("editEmployee did mount")
         axios.get("http://localhost:8080/api/admin/departments", {
             params: {
                 "item_parent_collection": "adv_settings",
@@ -67,7 +64,6 @@ class EditEmp extends React.Component {
             }
         })
             .then(AxiosResponse => {
-                console.log(AxiosResponse);
                 this.setState({
                     department_list: AxiosResponse.data
                 })
@@ -78,11 +74,9 @@ class EditEmp extends React.Component {
 
         })
             .then(AxiosResponse => {
-                console.log(AxiosResponse);
                 this.setState({
                     location_list: AxiosResponse.data
                 })
-                console.log(this.state);
             })
     }
 
@@ -92,7 +86,6 @@ class EditEmp extends React.Component {
                 this.setState({
                     currentEmployee: response.data
                 });
-                console.log(response.data)
             })
             .catch(e => {
                 console.log(e);
@@ -189,7 +182,7 @@ class EditEmp extends React.Component {
 
     onRemove(e) {
         if (window.confirm('Are you sure you want to remove this item?')) {
-            EmployeeDirectoryService.delete(this.state.currentEmployee.id)
+            EmployeeDirectoryService.delete(this.props.match.params.id)
                 .then(response => {
                     console.log(response.data);
                     this.props.history.push('/empdir')

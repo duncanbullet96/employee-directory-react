@@ -13,6 +13,9 @@ module.exports = app => {
     router.get("/:data", userTable.findUserByUsername );
 
     router.get("/:id", userTable.getUserByID);
+
+    //delete user by id
+    router.delete("/:id", userTable.removeUserbyId);
     
 
 

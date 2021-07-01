@@ -9,6 +9,7 @@ import ListEmployees from "./components/listEmployees.component";
 import AddEmp from './components/addEmployee.component';
 import EditEmp from './components/editEmployee.component';
 import AdminSettings from './components/adminSettings.component';
+import LiveSearch from './liveSearch.js'
 import { LoginScreen } from './components/auth/Login.component';
 
 
@@ -101,6 +102,9 @@ class App extends Component {
               <li className="nav-item">
                 <Link to={"/add"} className="nav-link">Add New</Link>
               </li>
+              <li className="nav-item">
+                <Link to={"/search"} className="nav-link">Live Search</Link>
+              </li>
             </div>
             <div className="navbar-nav float-right">
               <li className="nav-item">
@@ -158,6 +162,7 @@ class App extends Component {
                 render={
                   (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
                   )} />
+              <Route path="/search" component={LiveSearch} />
             </Switch>
           </div>
         </div>  //ending div

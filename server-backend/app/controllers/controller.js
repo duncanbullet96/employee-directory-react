@@ -227,3 +227,27 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
+
+
+
+// pretty find all - formatted
+exports.findbyNames = (req, res) =>{
+  const data = req.params.search
+  const formattedUserQuery = (`
+  select 
+  pd.id, 
+      pd.first_name, 
+      pd.last_name
+  from
+
+      wp_participants_databases pd
+  where 
+      pd.first_name like '%${data}%'
+      or pd.last_name like '%${data}%'
+
+  `)
+  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
+.then(data=>{
+  res.send(data);
+})
+}
