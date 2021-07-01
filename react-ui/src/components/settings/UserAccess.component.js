@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Fragment } from "react";
-import {Tabs, Tab, Table, Button, Accordion, Card, Spinner} from "react-bootstrap";
+import {Tabs, Tab, Table, Button} from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import {Trash} from 'react-bootstrap-icons';

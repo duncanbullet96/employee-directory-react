@@ -58,18 +58,11 @@ class AddEmp extends React.Component {
 
 
     fetchDepartments = () => {
-        axios.get("http://localhost:8080/api/admin/departments", {
-            params: {
-                "item_parent_collection": "adv_settings",
-                "item_name": "departments"
-            }
-        })
+        axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.props.currentUserID}`)
             .then(Response => {
-                console.log(Response);
                 this.setState({
                     department_list: Response.data
                 })
-                console.log(this.state);
             })
     }
 
@@ -81,11 +74,9 @@ class AddEmp extends React.Component {
             }
         })
             .then(Response => {
-                console.log(Response);
                 this.setState({
                     location_list: Response.data
                 })
-                console.log(this.state);
             })
 
     }
@@ -113,7 +104,6 @@ class AddEmp extends React.Component {
         this.setState({
             showAltPhone: e.target.checked
         })
-        console.log(this.state.showAltPhone)
         this.fetchAltPhoneTypes();
     }
 
@@ -149,7 +139,6 @@ class AddEmp extends React.Component {
         this.setState({
             department_id: e.target.value
         });
-        console.log(this.state.department_id)
     }
 
     onChangeLocation(e) {
@@ -190,7 +179,6 @@ class AddEmp extends React.Component {
                     title: response.data.title,
                     sumitted: true
                 });
-                console.log(response.data);
                 window.postMessage("success!");
                 this.props.addEmployee_onSuccess();
                 this.props.history.push('/');
@@ -201,12 +189,6 @@ class AddEmp extends React.Component {
             })
     }
 
-    listDepartments = () => {
-        console.log(this.state.department_list)
-
-
-
-    }
 
 
     render() {

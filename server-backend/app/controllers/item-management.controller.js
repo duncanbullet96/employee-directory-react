@@ -94,17 +94,27 @@ exports.deleteAssignmentbyID = (req, res) =>{
 
 
 exports.getAssignmentsForUser = (req, res) =>{
-  const owner_id = req.params.user_id;
-
-  ItemManagement.findAll({
-    attributes: ['id'],
-    where : {
-      item_owner_id : owner_id
-    }
-  })
-  .then(data =>{
-    res.json(data)
-  })
+  owner_id = req.params.userId
+  const itemOwnerQuerybyID = (`
+  select 
+  im.id,
+  adt.id as admin_item_id,
+  adt.item_name as admin_item_type,
+  ut.id as user_id,
+  adt.item_value
+from
+  item_management_s im,
+  user_tables ut,
+  admin_tables adt
+where 
+  im.item_id = adt.id
+  and ut.id = ${owner_id}
+  and im.item_owner_id = ut.id
+  `)
+  ItemManagement.sequelize.query(itemOwnerQuerybyID, {type: ItemManagement.sequelize.QueryTypes.SELECT})
+.then(data=>{
+  res.send(data);
+})
+}
 
   
-}

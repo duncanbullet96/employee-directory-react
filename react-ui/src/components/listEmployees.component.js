@@ -4,9 +4,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { PencilSquare } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-
-import { ErrorPage, LoadingItem, NothingHere } from './site-components/site-utils.component'
-import { error } from "jquery";
+import { ErrorPage, LoadingItem, NothingHere } from './site-components/site-utils.component';
 
 
 
@@ -57,7 +55,6 @@ export default class listEmployees extends Component {
     componentDidMount(error) {
         this.timeout = setTimeout(() => {
             this.setState({ isLoading: false });
-            console.log(this.state)
         }, 10);
 
 
@@ -73,27 +70,21 @@ export default class listEmployees extends Component {
                 this.setState({
                     currentUserID: Response.data[0].id
                 })
-                console.log('user mappigs start here')
                 this.getUserMappings();
             })
             .catch(error => {
                 console.log(error)
             });
-        console.log('start here')
     }
 
     getUserMappings = () => {
-        console.log(this.state.currentUserID)
         axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.state.currentUserID}`)
             .then(Response => {
-                console.log(Response.data)
                 this.setState({
                     UserMapping: Response.data
                 })
 
             });
-        console.log("this.state.UserMapping");
-        console.log(this.state.UserMapping)
         this.consoleUserMappings();
 
     }
@@ -101,8 +92,6 @@ export default class listEmployees extends Component {
 consoleUserMappings = () =>{
     const UserMappingArray = this.state.UserMapping;
 
-    console.log('usermappingarray')
-    console.log(UserMappingArray);
 }
 
     
@@ -111,7 +100,6 @@ consoleUserMappings = () =>{
 
         axios.get(`http://localhost:8080/api/empdir/list/15`)
             .then(Response => {
-                console.log(Response);
                 if (Response.status == '200')
                     this.setState({
                         employees: Response.data,
@@ -166,7 +154,7 @@ consoleUserMappings = () =>{
                     <ErrorPage errorMessage={this.state.errorMessage} />
                 </div>
             )
-        } else if (this.state.employees.length === 0) {
+        } else if (this.state.employees.length == 0) {
             return (
                 <div className="nothing-wrapper" >
                     <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"} />

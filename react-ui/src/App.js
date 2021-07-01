@@ -31,8 +31,9 @@ class App extends Component {
       toastValue: '',
       renderApp: 0,
       userLoggedIn: false,
-      role:'',
+      role: '',
       currentUser: null,
+      currentUserID: null,
       userToken: null
     }
 
@@ -46,12 +47,12 @@ class App extends Component {
   }
 
 
-  nextPath(path) {
+  nextPath = (path) => {
     this.props.history.push(path)
   }
 
 
-  successToast(props) {
+  successToast = (props) => {
     console.log('successToast Activated')
     this.setState({
       toastShow: true,
@@ -73,12 +74,14 @@ class App extends Component {
     this.setState({ toastShow: false })
   };
 
-  successfulLogin = (loginMode, loggedInUser) => {
+  successfulLogin = (loginMode, loggedInUser, userID) => {
     this.setState({
       userLoggedIn: true,
-      role : loginMode,
-      currentUser: loggedInUser
+      role: loginMode,
+      currentUser: loggedInUser,
+      currentUserID: userID
     })
+    console.log('successful login state:')
     console.log(this.state)
   }
 
@@ -106,7 +109,10 @@ class App extends Component {
                 <Link to={"/search"} className="nav-link">Live Search</Link>
               </li>
             </div>
-            <div className="navbar-nav float-right">
+            <div className="navbar-nav float-right ">
+              <li className="nav-item" style={{color:'white', marginTop:'5px'}}>
+                {this.state.currentUser}
+              </li>
               <li className="nav-item">
                 <Dropdown>
                   <Dropdown.Toggle id="gear-dropdown">
@@ -115,6 +121,9 @@ class App extends Component {
                   <Dropdown.Menu>
                     <Dropdown.Item>
                       <Link to={"/admin"} className="nav-link" style={{ color: 'black' }}>Admin</Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <Link to={"/logout"} className="nav-link" style={{ color: 'black' }}>LogOut</Link>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -150,12 +159,12 @@ class App extends Component {
               <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} {...this.state} />} />
               <Route path="/admin"
                 render={
-                  (props) => (<AdminSettings {...this.state}/>
-                    )}/>
+                  (props) => (<AdminSettings {...this.state} />
+                  )} />
 
               <Route path="/add"
                 render={
-                  (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
+                  (props) => (<AddEmp {...props} {...this.state} addEmployee_onSuccess={this.addEmployee_onSuccess} />
                   )} />
 
               <Route path="/empdir/:id"
@@ -171,7 +180,7 @@ class App extends Component {
 
 
     ///////////////////////////////////////standard mode//////////////////////////////////////////////////
-    else if(this.state.userLoggedIn && this.state.role == '3'){
+    else if (this.state.userLoggedIn && this.state.role == '3') {
       return (
         <div style={{
           width: 'auto',
@@ -188,6 +197,9 @@ class App extends Component {
               </li>
             </div>
             <div className="navbar-nav float-right">
+              <li className="nav-item" style={{color:'white', marginTop:'5px'}}>
+                {this.state.currentUser}
+              </li>
               <li className="nav-item">
                 <Dropdown>
                   <Dropdown.Toggle id="gear-dropdown">
@@ -195,7 +207,7 @@ class App extends Component {
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
-                        Logout
+                      Logout
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

@@ -23,7 +23,7 @@ class AdminSettings extends React.Component {
 
 
     componentDidMount() {
-        console.log(this.state);
+
         this.getUserPrivledges();
 
     };
@@ -37,7 +37,6 @@ class AdminSettings extends React.Component {
             showGeneral: false,
             showAdvanced: false
         })
-        console.log(this.state)
     }
 
     showGeneralSettings = () => {
@@ -47,7 +46,6 @@ class AdminSettings extends React.Component {
             isMenuItemActive: null
 
         })
-        console.log(this.state)
     };
 
     showAdvancedSettings = () => {
@@ -55,15 +53,12 @@ class AdminSettings extends React.Component {
             showAdvanced: true,
             showGeneral: false
         })
-        console.log(this.state)
     }
 
     getUserPrivledges = () => {
         const username = this.props.currentUser;
-        console.log('this is the priv function!!!!! ' + username);
         UserTableService.getUserByUsername(username)
             .then(Response => {
-                console.log(Response);
                 const userPriv = Response.data[0].role;
 
                 if (userPriv == 1) {

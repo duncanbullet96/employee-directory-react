@@ -1,7 +1,6 @@
 import axios from 'axios';
-import React, { Component, Fragment } from 'react';
-import { Form, Table, Button } from 'react-bootstrap';
-import SearchService from './services/search-service.js'
+import React, {Fragment } from 'react';
+import { Form, Table } from 'react-bootstrap';
 
 class LiveSearch extends React.Component {
     constructor(props) {

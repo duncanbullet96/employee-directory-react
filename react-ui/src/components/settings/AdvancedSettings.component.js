@@ -4,7 +4,7 @@ import { Tabs, Tab, Table, Button, Accordion, Card } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import AdminTableService from '../../services/admin-table.services';
-import { PencilSquare, Plus, PlusSquare, Trash } from 'react-bootstrap-icons';
+import {Trash } from 'react-bootstrap-icons';
 import FieldTableService from '../../services/field-table.services.js';
 
 class InputModal extends React.Component {

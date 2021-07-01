@@ -3,9 +3,6 @@ import {ReactComponent as HeartBeat} from '../site-components/svgs/heart-beat.sv
 import './login-style.css';
 import ADAuthService from '../../services/auth.services';
 import UserTableService from '../../services/user-table.services';
-import axios from 'axios';
-import { ResponsiveEmbed } from "react-bootstrap";
-import { error } from "jquery";
 
 
 
@@ -15,8 +12,9 @@ class LoginBox extends react.Component{
         this.state={
             username:'',
             password:'',
-            role:[],
-            user:''
+            role:'',
+            user:'',
+            id:''
         }
 
         this.attemptLogin = this.attemptLogin.bind(this);
@@ -39,17 +37,16 @@ class LoginBox extends react.Component{
     validateRole = (creds) =>{
         UserTableService.getUserByUsername(creds)
         .then(Response =>{
-            console.log(Response.data[0].role);
 
             if(Response){
                 this.setState({
                     role: Response.data[0].role,
-                    user: Response.data[0].username
+                    user: Response.data[0].username,
+                    id: Response.data[0].id
                 })
 
-                console.log(this.state.role);
                 this.props.RoleValid(this.state.role);
-                this.props.AuthSuccess(this.state.user);
+                this.props.AuthSuccess(this.state.user, this.state.id);
 
 
             }
@@ -63,10 +60,8 @@ class LoginBox extends react.Component{
             password: this.state.password
         }
         //e.preventDefault();
-        console.log(this.state)
        ADAuthService.authenticate(creds)
        .then(Response =>{
-           console.log(Response);
            if(Response.data.ldap_response_code == 0){
                console.log('user successfully authenticated');
 
@@ -144,21 +139,22 @@ class LoginScreen extends react.Component{
         this.AuthSuccess = this.AuthSuccess.bind(this);
         this.RoleValid = this.RoleValid.bind(this);
 
+
     }
 
     componentDidMount(){
         setTimeout(() => {this.setState({ isLoading: false })}, 50);
     }
 
+
     RoleValid = (childData) =>{
-        console.log('child data: '+ childData);
         this.setState({
             loginMode : childData
         });
     }
 
-    AuthSuccess = (user) =>{
-        this.props.successfulLogin(this.state.loginMode, user);
+    AuthSuccess = (user, id) =>{
+        this.props.successfulLogin(this.state.loginMode, user, id);
     }
 
     render(){
