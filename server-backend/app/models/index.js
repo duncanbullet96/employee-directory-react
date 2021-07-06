@@ -44,7 +44,7 @@ db.fieldData = require("./fields/field-data.model.js")(sequelize, Sequelize);
 
 
 
-
+db.user_session = require("./user-session.model.js")(sequelize, Sequelize);
 db.admin_table = require("./admin-table.model.js")(sequelize, Sequelize);
 db.user_table = require("./userTable.model.js")(sequelize, Sequelize);
 db.role_table = require("./role-table.model.js")(sequelize, Sequelize);

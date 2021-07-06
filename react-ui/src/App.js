@@ -11,12 +11,14 @@ import EditEmp from './components/editEmployee.component';
 import AdminSettings from './components/adminSettings.component';
 import LiveSearch from './liveSearch.js'
 import { LoginScreen } from './components/auth/Login.component';
+import userSessionServices from './services/user-session.services';
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Gear from 'react-bootstrap-icons/dist/icons/gear'
 import Toast from 'react-bootstrap/Toast';
 import Dropdown from 'react-bootstrap/Dropdown';
+import axios from 'axios';
 
 
 
@@ -81,8 +83,15 @@ class App extends Component {
       currentUser: loggedInUser,
       currentUserID: userID
     })
-    console.log('successful login state:')
-    console.log(this.state)
+    
+    const username1 = this.state.currentUser
+    const options = {
+      username: username1
+    }
+    axios.post(`http://localhost:8080/api/session/new`, options )
+    .then(Response=>{
+      localStorage.setItem('sessionID', Response.data.session_id)
+    })
   }
 
 
