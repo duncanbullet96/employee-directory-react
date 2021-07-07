@@ -35,6 +35,7 @@ class App extends Component {
       renderApp: 0,
       userLoggedIn: false,
       role: '',
+      id: null,
       currentUser: null,
       currentUserID: null,
       userHasToken: null,
@@ -123,7 +124,8 @@ class App extends Component {
     userTableServices.getUserByUsername(this.state.currentUser)
       .then(Response => {
         this.setState({
-          role: Response.data.role
+          role: Response.data.role,
+          id: Response.data.id
         })
         console.log(Response)
       })
@@ -313,7 +315,7 @@ class App extends Component {
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item>
-                      Logout
+                      <Link to={"/logout"} onClick={this.logOutUser} className="nav-link" style={{ color: 'black' }}>LogOut</Link>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -346,18 +348,20 @@ class App extends Component {
           <div className="parent-div">
 
             <Switch>
-              <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} />} />
+            <Route exact path={["/", "/empdir"]} render={(props) => <ListEmployees {...props} {...this.state} />} />
               <Route exact path="/admin" component={AdminSettings} />
 
               <Route path="/add"
                 render={
-                  (props) => (<AddEmp {...props} addEmployee_onSuccess={this.addEmployee_onSuccess} />
+                  (props) => (<AddEmp {...props} {...this.state} addEmployee_onSuccess={this.addEmployee_onSuccess} />
                   )} />
 
               <Route path="/empdir/:id"
                 render={
                   (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
                   )} />
+
+              <Route exact path="/logout" render={() => (<Redirect to="/" />)} />
             </Switch>
           </div>
         </div>  //ending div

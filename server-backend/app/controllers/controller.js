@@ -17,14 +17,14 @@ exports.create = (req, res) => {
   // Create a EmpDB
   const employee = {
     private_id: req.body.private_id,
-    first_name: req.body.first_name, 
-    last_name: req.body.last_name ,
-    phone: req.body.phone ,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    phone: req.body.phone,
     alt_phone: req.body.alt_phone,
-    email: req.body.email ,
-    department_id: req.body.department_id ,
-    location_id: req.body.location_id ,
-    title: req.body.title ,
+    email: req.body.email,
+    department_id: req.body.department_id,
+    location_id: req.body.location_id,
+    title: req.body.title,
   };
 
   // Save EmpDB in the database
@@ -64,7 +64,7 @@ exports.findAll = (req, res) => {
 
 
 // pretty find all - formatted
-exports.findAllFormatted = (req, res) =>{
+exports.findAllFormatted = (req, res) => {
   const formattedUserQuery = (`
   select 
   pd.id, 
@@ -87,17 +87,17 @@ exports.findAllFormatted = (req, res) =>{
       and pd.location_id = adt2.id
 
   `)
-  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
-.then(data=>{
-  res.send(data);
-})
+  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
+    .then(data => {
+      res.send(data);
+    })
 }
 
 
 
 
 // pretty find all - formatted
-exports.findbyDepartment = (req, res) =>{
+exports.findbyDepartment = (req, res) => {
   const data = req.params.id;
   const location_id = req.body.location_id;
   const formattedUserQuery = (`
@@ -123,10 +123,10 @@ exports.findbyDepartment = (req, res) =>{
       and pd.location_id = adt2.id
 
   `)
-  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
-.then(data=>{
-  res.send(data);
-})
+  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
+    .then(data => {
+      res.send(data);
+    })
 }
 
 
@@ -231,7 +231,7 @@ exports.findAllPublished = (req, res) => {
 
 
 // pretty find all - formatted
-exports.findbyNames = (req, res) =>{
+exports.findbyNames = (req, res) => {
   const data = req.params.search
   const formattedUserQuery = (`
   select 
@@ -246,14 +246,64 @@ exports.findbyNames = (req, res) =>{
       or pd.last_name like '%${data}%'
 
   `)
-  EmpDB.sequelize.query(formattedUserQuery, {type: EmpDB.sequelize.QueryTypes.SELECT})
-.then(data=>{
-  res.send(data);
-})
+  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
+    .then(data => {
+      res.send(data);
+    })
 }
 
 
-exports.findbyOwnership = (req, res) =>{
-
+exports.findbyOwnership = (req, res) => {
+  const userid = req.params.userid;
+  const formattedUserQuery = (`
   
+  select 
+  pd.id, 
+      pd.first_name, 
+      pd.last_name,
+      pd.phone, 
+      pd.alt_phone,
+      pd.email,
+      pd.title,
+      adt1.item_value as 'department',
+      adt2.item_value as 'location',
+      pd.createdAt, 
+      pd.updatedAt
+  from
+      admin_tables adt1,
+      admin_tables adt2,
+      wp_participants_databases pd,
+      item_management_s im
+  where 
+      im.item_owner_id = ${userid}
+      and im.item_id = adt1.id
+      and pd.department_id = adt1.id
+      and pd.location_id = adt2.id
+
+  `)
+  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
+    .then(data => {
+      res.send(data);
+    })
+}
+
+
+
+exports.departmentalOwnership = (req, res) => {
+  const userid = req.params.userid;
+  const formattedUserQuery = (`
+  select 
+      adt1.item_value
+  from
+      admin_tables adt1,
+      item_management_s im
+  where 
+      im.item_owner_id = ${userid}
+      and im.item_id = adt1.id
+      
+        `)
+  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
+    .then(data => {
+      res.send(data);
+    })
 }

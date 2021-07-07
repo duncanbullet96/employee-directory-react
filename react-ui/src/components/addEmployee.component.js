@@ -58,7 +58,7 @@ class AddEmp extends React.Component {
 
 
     fetchDepartments = () => {
-        axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.props.currentUserID}`)
+        axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.props.id}`)
             .then(Response => {
                 this.setState({
                     department_list: Response.data
@@ -285,7 +285,7 @@ class AddEmp extends React.Component {
                                 {this.state.department_list.map((currItem, i) => {
                                     return (
                                         <Fragment>
-                                            <option key={i} value={currItem.id} label={currItem.item_value} ></option>
+                                            <option key={i} value={currItem.admin_item_id} label={currItem.item_value} ></option>
                                         </Fragment>
                                     )
                                 })}

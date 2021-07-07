@@ -5,6 +5,7 @@ import axios from "axios";
 import { PencilSquare } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { ErrorPage, LoadingItem, NothingHere } from './site-components/site-utils.component';
+import { Fragment } from "react";
 
 
 
@@ -39,14 +40,15 @@ export default class listEmployees extends Component {
             loading: true,
 
             currentUser: this.props.currentUser,
-            currentUserID: '',
+            currentUserID: this.props.id,
             UserMapping: [],
 
             employees: [],
 
+            usersDepartmentsAccess:[],
+
 
         }
-        this.getUserMappings = this.getUserMappings.bind(this);
 
     }
 
@@ -56,51 +58,15 @@ export default class listEmployees extends Component {
         this.timeout = setTimeout(() => {
             this.setState({ isLoading: false });
         }, 10);
-
-
-        this.getUserID();
         this.fetchEmployees();
-
+        this.departmentManagement();
     };
 
 
-    getUserID = () => {
-
-        axios.get(`http://localhost:8080/api/admin/users/${this.state.currentUser}`)
-            .then(Response => {
-                this.setState({
-                    currentUserID: Response.data[0].id
-                })
-                this.getUserMappings();
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-
-    getUserMappings = () => {
-        axios.get(`http://localhost:8080/api/admin/item_management/ownership/${this.state.currentUserID}`)
-            .then(Response => {
-                this.setState({
-                    UserMapping: Response.data
-                })
-
-            });
-        this.consoleUserMappings();
-
-    }
-
-consoleUserMappings = () =>{
-    const UserMappingArray = this.state.UserMapping;
-
-}
-
-    
 
     fetchEmployees = () => {
-
-        axios.get(`http://localhost:8080/api/empdir/list/15`)
-            .then(Response => {
+        axios.get(`http://localhost:8080/api/empdir/list/${this.state.currentUserID}`)
+        .then(Response => {
                 if (Response.status == '200')
                     this.setState({
                         employees: Response.data,
@@ -115,6 +81,16 @@ consoleUserMappings = () =>{
                     isLoading: false
                 })
             })
+    }
+
+    departmentManagement = () =>{
+        axios.get(`http://localhost:8080/api/empdir/dept/${this.state.currentUserID}`)
+        .then(Response =>{
+            this.setState({
+                usersDepartmentsAccess: Response.data
+            })
+        })
+
     }
 
 
@@ -163,29 +139,46 @@ consoleUserMappings = () =>{
             )
         }
         return (
-            <div className="container mt-3">
-                <h3>Employees</h3>
-                <br />
-                <div>
-                    <Link to={"/add"} className="btn btn-primary float-right mb-3 ">Add New</Link>
+            <div className="parent-div">
+
+                <div className="container mt-3">
+                    <h3>Employees</h3>
+                    <div>
+                        <div>You have access to the following departments: </div>
+                        <br/>
+                        {this.state.usersDepartmentsAccess.map((currItem, i) => {
+                                    return (
+                                        <Fragment>
+                                            <li key={i}>{currItem.item_value}</li>
+                                        </Fragment>
+                                    )
+                                })}
+                    </div>
+                    <br />
+                    <div>
+                        <Link to={"/add"} className="btn btn-primary float-right mb-3 ">Add New</Link>
+                    </div>
+                    <table className="table table-striped" style={{ marginTop: 20 }} >
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone</th>
+                                <th>Alt Phone</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Location</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.listOfEmployees()}
+                        </tbody>
+                    </table>
                 </div>
-                <table className="table table-striped" style={{ marginTop: 20 }} >
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone</th>
-                            <th>Alt Phone</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                            <th>Location</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.listOfEmployees()}
-                    </tbody>
-                </table>
+
+
+
             </div>
         )
     }

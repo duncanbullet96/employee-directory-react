@@ -16,11 +16,13 @@ module.exports = app => {
     router.get("/:id", EmpDB.findOne);
 
     //get employeed by department
-    router.get("/list/:id", EmpDB.findbyDepartment)
+    router.get("/list/:userid", EmpDB.findbyOwnership)
 
 
     router.get("/search/:search", EmpDB.findbyNames)
 
+    //department ownership by id
+    router.get("/dept/:userid", EmpDB.departmentalOwnership)
 
     // Update a Tutorial with id
     router.put("/:id", EmpDB.update);
