@@ -59,7 +59,7 @@ class AdminSettings extends React.Component {
         const username = this.props.currentUser;
         UserTableService.getUserByUsername(username)
             .then(Response => {
-                const userPriv = Response.data[0].role;
+                const userPriv = Response.data.role;
 
                 if (userPriv == 1) {
                     this.setState({

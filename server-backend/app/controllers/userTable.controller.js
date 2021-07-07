@@ -67,7 +67,8 @@ exports.getUserByID = (req, res) => {
 
 exports.findUserByUsername = (req, res) => {
   UserTable.findAll({
-    attributes: ['role', 'id', 'username'],
+    plain:true,
+    attributes: ['role', 'id', 'username', 'ad_auth'],
     where: {
       username: req.params.data
     }

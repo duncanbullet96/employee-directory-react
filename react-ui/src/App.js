@@ -1,7 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 
@@ -19,6 +19,7 @@ import Gear from 'react-bootstrap-icons/dist/icons/gear'
 import Toast from 'react-bootstrap/Toast';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
+import userTableServices from './services/user-table.services';
 
 
 
@@ -36,7 +37,8 @@ class App extends Component {
       role: '',
       currentUser: null,
       currentUserID: null,
-      userToken: null
+      userHasToken: null,
+      authPass: null
     }
 
     // this.onChildClicked = this.onChildClicked.bind(this);
@@ -45,8 +47,88 @@ class App extends Component {
     this.editEmployee_onSuccess = this.editEmployee_onSuccess.bind(this);
     this.addEmployee_onSuccess = this.addEmployee_onSuccess.bind(this);
     this.successfulLogin = this.successfulLogin.bind(this);
+    this.tokenCheck = this.tokenCheck.bind(this);
 
   }
+
+
+  // first thing app does is check for login token
+  componentDidMount = () => {
+    this.tokenCheck()
+  }
+
+
+
+  // check if there is a local token called 'EmpDirSessionID'
+  //if there is one, set the state as such
+  tokenCheck = () => {
+    var currentUserSessionId = localStorage.getItem('EmpDirUserSessionID')
+
+    if (currentUserSessionId !== null) {
+      this.setState({
+        userHasToken: true
+      }, () => {
+        this.validateSession();
+      })
+
+    } else {
+      this.setState({
+        userHasToken: false
+      })
+    }
+
+  }
+
+  validateSession = () => {
+    var currentUserSessionId = localStorage.getItem('EmpDirUserSessionID');
+
+    userSessionServices.validate(currentUserSessionId)
+      .then(Response => {
+        console.log(Response)
+        if (Response.data.isValidSession) {
+          console.log('status 200 ok')
+          this.getUsernameByToken();
+        }
+        else {
+          console.log('unauthorized session');
+          localStorage.clear('EmpDirUserSessionID')
+          this.tokenCheck();
+        }
+      })
+      .then(
+        () => {
+          this.setState({
+            userLoggedIn: true
+          })
+        }
+      )
+  }
+
+  getUsernameByToken = () => {
+    var currentUserSessionId = localStorage.getItem('EmpDirUserSessionID')
+    userSessionServices.get(currentUserSessionId)
+      .then(Response => {
+        this.setState({
+          currentUser: Response.data[0].username
+        })
+      })
+      .then(
+        ()=>{
+          this.getRoleByUsername()
+        }
+      )
+  }
+
+  getRoleByUsername = () => {
+    userTableServices.getUserByUsername(this.state.currentUser)
+      .then(Response => {
+        this.setState({
+          role: Response.data.role
+        })
+        console.log(Response)
+      })
+  }
+
 
 
   nextPath = (path) => {
@@ -76,21 +158,32 @@ class App extends Component {
     this.setState({ toastShow: false })
   };
 
-  successfulLogin = (loginMode, loggedInUser, userID) => {
+  successfulLogin = (loggedInUser, authPass) => {
     this.setState({
-      userLoggedIn: true,
-      role: loginMode,
-      currentUser: loggedInUser,
-      currentUserID: userID
-    })
-    
+      authPass: authPass,
+      currentUser: loggedInUser
+    });
+    console.log(this.state)
     const username1 = this.state.currentUser
     const options = {
       username: username1
     }
-    axios.post(`http://localhost:8080/api/session/new`, options )
-    .then(Response=>{
-      localStorage.setItem('sessionID', Response.data.session_id)
+    axios.post(`http://localhost:8080/api/session/new`, options)
+      .then(Response => {
+        localStorage.setItem('EmpDirUserSessionID', Response.data.session_id);
+      })
+      .then(
+        ()=>{this.tokenCheck()}
+      )
+  }
+
+
+
+
+  logOutUser = () => {
+    localStorage.clear('EmpDirUserSessionID');
+    this.setState({
+      userLoggedIn: false
     })
   }
 
@@ -98,6 +191,7 @@ class App extends Component {
 
 
   render() {
+
     /////////////////////////////////////////admin mode///////////////////////////////////////////////////
     if (this.state.userLoggedIn && this.state.role == '1') {
       return (
@@ -119,7 +213,7 @@ class App extends Component {
               </li>
             </div>
             <div className="navbar-nav float-right ">
-              <li className="nav-item" style={{color:'white', marginTop:'5px'}}>
+              <li className="nav-item" style={{ color: 'white', marginTop: '5px' }}>
                 {this.state.currentUser}
               </li>
               <li className="nav-item">
@@ -132,7 +226,7 @@ class App extends Component {
                       <Link to={"/admin"} className="nav-link" style={{ color: 'black' }}>Admin</Link>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                      <Link to={"/logout"} className="nav-link" style={{ color: 'black' }}>LogOut</Link>
+                      <Link to={"/logout"} onClick={this.logOutUser} className="nav-link" style={{ color: 'black' }}>LogOut</Link>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
@@ -181,6 +275,9 @@ class App extends Component {
                   (props) => (<EditEmp {...props} editEmployee_onSuccess={this.editEmployee_onSuccess} />
                   )} />
               <Route path="/search" component={LiveSearch} />
+
+              <Route exact path="/logout" render={() => (<Redirect to="/" />)} />
+
             </Switch>
           </div>
         </div>  //ending div
@@ -206,7 +303,7 @@ class App extends Component {
               </li>
             </div>
             <div className="navbar-nav float-right">
-              <li className="nav-item" style={{color:'white', marginTop:'5px'}}>
+              <li className="nav-item" style={{ color: 'white', marginTop: '5px' }}>
                 {this.state.currentUser}
               </li>
               <li className="nav-item">

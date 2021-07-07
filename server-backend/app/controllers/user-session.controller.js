@@ -7,19 +7,17 @@ const { now } = require("moment");
 
 
 const fs = require("fs");
+const exp = require("constants");
 
 const config_file = fs.readFileSync('config.json');
 const session_config = JSON.parse(config_file);
-
-console.log(session_config);
-console.log(session_config.user_session_config.sessionTimeout);
 
 // Create and Save a new User in the UserTable in MySQL
 exports.createSession = (req, res) => {
   // Generate a random Unique User ID (UUID)
   function makeUUID(length) {
     var result = [];
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz!';
     var charactersLength = characters.length;
 
     for (var i = 0; i < length; i++) {
@@ -28,7 +26,7 @@ exports.createSession = (req, res) => {
     return result.join('');
   }
 
-  var id = makeUUID(12);
+  var id = makeUUID(session_config.user_session_config.tokenLength);
   var currDate = new Date();
   var expire_date = currDate.setMinutes(currDate.getMinutes()+ session_config.user_session_config.sessionTimeout);
 
@@ -106,3 +104,35 @@ exports.removeSession = (req, res) =>{
         });
     });
 };
+
+
+exports.validateSession = (req,res) => {
+    const currDate = Date.now()
+    const session_id = req.params.id
+    UserSession.findAll({
+        where : {session_id : session_id},
+        plain:true
+    })
+    .then(data =>{
+        console.log(data.dataValues.expires);
+        if(currDate > data.dataValues.expires){
+            console.log('expired');
+            res.status(200).send({
+                isValidSession: false
+            });
+        }
+        else{
+            console.log('valid')
+            var expires_in_sec =  Math.floor( ( (data.dataValues.expires - Date.now()) / 1000 ) %60);
+            var expires_in_min = Math.floor( ( ((data.dataValues.expires - Date.now()) / 1000 ) /60 ) %60);
+
+            res.status(200).send({
+                isValidSession: true,
+                sessionExpires: ( expires_in_min+'m' + ' ' + expires_in_sec+'s')
+            })
+        }
+    })
+    .catch(err =>{
+        res.status(401).send(err)
+    })
+}

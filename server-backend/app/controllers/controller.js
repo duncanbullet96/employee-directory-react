@@ -251,3 +251,9 @@ exports.findbyNames = (req, res) =>{
   res.send(data);
 })
 }
+
+
+exports.findbyOwnership = (req, res) =>{
+
+  
+}

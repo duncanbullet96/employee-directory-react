@@ -10,8 +10,12 @@ module.exports = app => {
     //get single session by id
     router.get("/:id", UserSession.findSessionbyID);
 
+    router.get("/validate/:id", UserSession.validateSession);
+
 
     router.delete("/:id", UserSession.removeSession);
+
+
     
     
 

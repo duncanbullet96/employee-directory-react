@@ -17,6 +17,10 @@ class UserSessionService {
         return http.delete(`/session/${id}`);
     }
 
+    validate(id){
+        return http.get(`/session/validate/${id}`);
+    }
+
 
 
 }
