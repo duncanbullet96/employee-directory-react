@@ -5,6 +5,9 @@ const { urlencoded } = require('body-parser');
 
 
 
+
+
+
 const app = express();
 
 var corsOptions = {
@@ -29,6 +32,8 @@ require("./app/routes/admin-table.routes.js")(app);
 require("./app/routes/UserTable.routes.js")(app);
 require("./app/routes/role-table.routes.js")(app);
 require("./app/routes/item-management.routes.js")(app);
+require("./app/routes/fields-table.routes.js")(app);
+require("./app/routes/user-session.routes.js")(app);
 
 
 //set port and listen for requests

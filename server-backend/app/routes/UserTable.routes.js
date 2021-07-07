@@ -9,7 +9,13 @@ module.exports = app => {
     //get all users
     router.get("/all", userTable.getAllUsers);
 
+    // find user by their username
+    router.get("/:data", userTable.findUserByUsername );
+
     router.get("/:id", userTable.getUserByID);
+
+    //delete user by id
+    router.delete("/:id", userTable.removeUserbyId);
     
 
 

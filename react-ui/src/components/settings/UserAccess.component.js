@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Fragment } from "react";
-import {Tabs, Tab, Table, Button, Accordion, Card, Spinner} from "react-bootstrap";
+import {Tabs, Tab, Table, Button} from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
 import {Trash} from 'react-bootstrap-icons';
@@ -107,11 +107,11 @@ class AddNewUserModal extends React.Component{
     onChangeADAuth(e){
         if(e.target.checked){
             this.setState({
-                ad_auth: 'true'
+                ad_auth: 1
             })
         }else if(!e.target.checked){
             this.setState({
-                ad_auth: 'false'
+                ad_auth: 0
             })
         }
     };
@@ -209,7 +209,7 @@ class AddNewUserModal extends React.Component{
                             <div className="form-group col-md-6">
                                 <label htmlFor="department">User Role</label>
                                 <Form.Control as="select" onChange={this.onChangeRole}>
-                                    <option className="default-text">Please Select a Department</option>
+                                    <option className="default-text">Please Select a Role</option>
                                 {this.state.role_list.map((currRole, i)=>{
                                     return(
                                         <Fragment>
@@ -574,6 +574,8 @@ return(
 }
 }
 
+
+
 class UserAccess extends React.Component{
 
     render(){
@@ -596,6 +598,9 @@ class UserAccess extends React.Component{
     }
 
 };
+
+
+
 
 export {UserAccess};
 

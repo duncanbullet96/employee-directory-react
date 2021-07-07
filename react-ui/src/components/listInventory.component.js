@@ -1,14 +1,32 @@
 //import editEmployee from './editEmployee.component'
 //import Toast from 'react-bootstrap/Toast';
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import axios from "axios";
-import {PencilSquare } from 'react-bootstrap-icons';
-import { Link } from "react-router-dom";
+import { PencilSquare } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
+import { ErrorPage, LoadingItem, NothingHere } from './site-components/site-utils.component';
+import { Fragment } from "react";
 
-import {ErrorPage, LoadingItem, NothingHere} from './site-components/site-utils.component'
 
 
 
+
+
+const EmployeeProps = props => (
+    <tr>
+        <td>{props.employee.first_name}</td>
+        <td>{props.employee.last_name}</td>
+        <td>{props.employee.phone}</td>
+        <td>{props.employee.alt_phone}</td>
+        <td>{props.employee.email}</td>
+        <td>{props.employee.department}</td>
+        <td>{props.employee.location}</td>
+        <td>
+            <Link to={"/empdir/" + props.employee.id}><PencilSquare /></Link>
+        </td>
+    </tr>
+
+);
 
 
 
@@ -20,43 +38,75 @@ export default class listEmployees extends Component {
             apiError: null,
             errorMessage: '',
             loading: true,
-            itemList: [],
+
+            currentUser: this.props.currentUser,
+            currentUserID: this.props.id,
+            UserMapping: [],
+
+            employees: [],
+
+            usersDepartmentsAccess:[],
 
 
         }
-        
+
     }
 
 
-    
-    
-   async componentDidMount(error){
-        this.timeout = setTimeout ( () => {
-            this.setState({isLoading: false});
-            console.log(this.state)
+
+    componentDidMount(error) {
+        this.timeout = setTimeout(() => {
+            this.setState({ isLoading: false });
         }, 10);
-        
-        //console.log("ListEmployee did mount")
-        axios.get("http://localhost:8080/api/items/all")
+        this.fetchEmployees();
+        this.departmentManagement();
+    };
+
+
+
+    fetchEmployees = () => {
+        axios.get(`http://localhost:8080/api/empdir/list/${this.state.currentUserID}`)
         .then(Response => {
-            console.log(Response);
-            if(Response.status == '200')
-            this.setState({
-                itemList : Response.data,
-                isLoading: false
+                if (Response.status == '200')
+                    this.setState({
+                        employees: Response.data,
+                        isLoading: false
+                    })
+
             })
-        })
-        .catch(error => {
-            this.setState({
-                apiError: true,
-                errorMessage: 'API Error',
-                isLoading: false
+            .catch(error => {
+                this.setState({
+                    apiError: true,
+                    errorMessage: 'API Error' + JSON.stringify(error),
+                    isLoading: false
+                })
             })
-        })
     }
+
+    departmentManagement = () =>{
+        axios.get(`http://localhost:8080/api/empdir/dept/${this.state.currentUserID}`)
+        .then(Response =>{
+            this.setState({
+                usersDepartmentsAccess: Response.data
+            })
+        })
+
+    }
+
+
+
+
+
+
+    listOfEmployees() {
+        return this.state.employees.map(function (currEmployee, i) {
+            return <EmployeeProps employee={currEmployee} key={i} />
+
+        })
+    };
 
     editEmployee() {
-        return(
+        return (
             <tr>
                 <td><input value={this.listOfEmployees()}></input></td>
             </tr>
@@ -65,68 +115,70 @@ export default class listEmployees extends Component {
 
 
 
-    render(){
-        if(this.state.isLoading){
-            return( 
-            <div style={{textAlign:"center"}}>
-                <LoadingItem loading={this.state.isLoading} positon='center'/>
-            </div>
+    render() {
+        if (this.state.isLoading) {
+            return (
+                <div style={{ textAlign: "center" }}>
+                    <LoadingItem loading={this.state.isLoading} positon='center' />
+                </div>
 
             )
         }
 
-        if(this.state.apiError){
-            return(
+        if (this.state.apiError) {
+            return (
                 <div className="error-wrapper" >
-                    <ErrorPage errorMessage={this.state.errorMessage}/>
+                    <ErrorPage errorMessage={this.state.errorMessage} />
                 </div>
             )
-        } else if(this.state.itemList.length === 0){
-            return(
+        } else if (this.state.employees.length == 0) {
+            return (
                 <div className="nothing-wrapper" >
-                    <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"}/>
+                    <NothingHere errorMessage={"If you haven't created any new Employees yet, please click the Add New button above"} />
                 </div>
             )
         }
-        return(
-            <div className="container mt-3">
-                <h3>Inventory</h3>
-                <br/>
-                <div>
-                    <Link to={"/add"}  className="btn btn-primary float-right mb-3 ">Add New</Link>
+        return (
+            <div className="parent-div">
+
+                <div className="container mt-3">
+                    <h3>Employees</h3>
+                    <div>
+                        <div>You have access to the following departments: </div>
+                        <br/>
+                        {this.state.usersDepartmentsAccess.map((currItem, i) => {
+                                    return (
+                                        <Fragment>
+                                            <li key={i}>{currItem.item_value}</li>
+                                        </Fragment>
+                                    )
+                                })}
+                    </div>
+                    <br />
+                    <div>
+                        <Link to={"/add"} className="btn btn-primary float-right mb-3 ">Add New</Link>
+                    </div>
+                    <table className="table table-striped" style={{ marginTop: 20 }} >
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Phone</th>
+                                <th>Alt Phone</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Location</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.listOfEmployees()}
+                        </tbody>
+                    </table>
                 </div>
-                <table className="table table-striped" style={{ marginTop: 20 }} >
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Category</th>
-                            <th>Location</th>
-                            <th>QTY</th>
-                            <th>TrackIt Number</th>
-                            <th>Entered By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.itemList.map((currItem, i)=>{
-                                return(
-                                    <Fragment>
-                                        <tr key={i}>
-                                            <td>{currItem.item_name}</td>
-                                            <td>{currItem.category_name}</td>
-                                            <td>{currItem.location_name}</td>
-                                            <td>{currItem.qty}</td>
-                                            <td>{currItem.trackit_id}</td>
-                                            <td>{currItem.created_by}</td>
-                                            <td>
-                                                <Link to={`/edit/${currItem.id}`} >
-                                                    <PencilSquare/>
-                                                </Link></td>
-                                        </tr>
-                                    </Fragment>
-                                )
-                            })}
-                    </tbody>
-                </table>
+
+
+
             </div>
         )
     }

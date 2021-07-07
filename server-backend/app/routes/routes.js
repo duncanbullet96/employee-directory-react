@@ -1,28 +1,37 @@
 module.exports = app => {
-    const InventoryDB = require("../controllers/controller.js");
+    const EmpDB = require("../controllers/controller.js");
 
     var router = require("express").Router();
 
     //create new tutorial
-    router.post("/items/create", InventoryDB.create);
+    router.post("/", EmpDB.create);
     
     //retreive all tutorials 
-    router.get("/items/all", InventoryDB.findAll);
+    router.get("/", EmpDB.findAllFormatted);
 
     // Retrieve all published Tutorials
-    router.get("/published", InventoryDB.findAllPublished);
+    router.get("/published", EmpDB.findAllPublished);
 
     // Retrieve a single Tutorial with id
-    router.get("/:id", InventoryDB.findOne);
+    router.get("/:id", EmpDB.findOne);
+
+    //get employeed by department
+    router.get("/list/:userid", EmpDB.findbyOwnership)
+
+
+    router.get("/search/:search", EmpDB.findbyNames)
+
+    //department ownership by id
+    router.get("/dept/:userid", EmpDB.departmentalOwnership)
 
     // Update a Tutorial with id
-    router.put("/:id", InventoryDB.update);
+    router.put("/:id", EmpDB.update);
 
     // Delete a Tutorial with id
-    router.delete("/:id", InventoryDB.delete);
+    router.delete("/:id", EmpDB.delete);
 
     // Delete all Tutorials
-    router.delete("/", InventoryDB.deleteAll);
+    router.delete("/", EmpDB.deleteAll);
 
-app.use('/api/', router);
+app.use('/api/empDir', router);
 };
