@@ -1,2 +1,0 @@
-wt new-tab -p "Command Prompt" -d "%cd%" cmd /k "cd c:\node\dev\employee-directory-react\server-backend & nodemon
-wt new-tab -p "Command Prompt" -d "%cd%" cmd /k "cd c:\node\dev\employee-directory-react\react-ui & npm start

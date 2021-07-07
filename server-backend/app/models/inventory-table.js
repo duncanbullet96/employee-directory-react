@@ -3,36 +3,34 @@
 const { sequelize, Sequelize } = require("sequelize");
 
 module.exports = (sequelize, Sequelize) => {
-    const wp_participants_database = sequelize.define("wp_participants_database", {
-        private_id: {
+    const inventory_list = sequelize.define("inventory_list_", {
+        item_name: {
             type: Sequelize.STRING
         },
-        first_name: {
+        category_name: {
             type: Sequelize.STRING
         },
-        last_name: {
+        location_name: {
             type: Sequelize.STRING
         },
-        phone: {
+        qty: {
             type: Sequelize.STRING
         },
-        alt_phone:{
+        trackit_id: {
             type: Sequelize.STRING
         },
-        email: {
+        status: {
             type: Sequelize.STRING
         },
-        department_id: {
+        created_by: {
             type: Sequelize.STRING
         },
-        location_id: {
-            type: Sequelize.STRING
-        },
-        title: {
+        comment: {
             type: Sequelize.STRING
         }
+        
     });
 
-return wp_participants_database;
+return inventory_list;
 
 };

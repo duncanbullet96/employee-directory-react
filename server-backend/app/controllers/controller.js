@@ -1,5 +1,5 @@
 const db = require("../models");            //pulls in the /models/index.js file, we're pulling the "db" variable out of  
-const EmpDB = db.wp_participants_database;
+const InventoryDB = db.inventory_list;
 const Op = db.Sequelize.Op;
 
 
@@ -7,7 +7,7 @@ const Op = db.Sequelize.Op;
 // Create and Save a new EmpDB
 exports.create = (req, res) => {
   // Validate request
-  if (!req.body.title) {
+  if (!req.body.item_name) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -15,20 +15,19 @@ exports.create = (req, res) => {
   }
 
   // Create a EmpDB
-  const employee = {
-    private_id: req.body.private_id,
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    phone: req.body.phone,
-    alt_phone: req.body.alt_phone,
-    email: req.body.email,
-    department_id: req.body.department_id,
-    location_id: req.body.location_id,
-    title: req.body.title,
+  const item = {
+    item_name : req.body.item_name, 
+    category_name : req.body.category_name, 
+    location_name : req.body.location_name, 
+    qty : req.body.qty,
+    trackit_id: req.body.trackit_id,
+    comment: req.body.comment,
+    status: req.body.status,
+    created_by : req.body.created_by
   };
 
   // Save EmpDB in the database
-  EmpDB.create(employee)
+  InventoryDB.create(item)
     .then(data => {
       res.send(data);
     })
@@ -40,16 +39,10 @@ exports.create = (req, res) => {
     });
 };
 
-
-
-
-
 // Retrieve all EmpDBs from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-  EmpDB.findAll({ where: condition })
+  InventoryDB.findAll()
     .then(data => {
       res.send(data);
     })
@@ -61,82 +54,11 @@ exports.findAll = (req, res) => {
     });
 };
 
-
-
-// pretty find all - formatted
-exports.findAllFormatted = (req, res) => {
-  const formattedUserQuery = (`
-  select 
-  pd.id, 
-      pd.first_name, 
-      pd.last_name,
-      pd.phone, 
-      pd.alt_phone,
-      pd.email,
-      pd.title,
-      adt1.item_value as 'department',
-      adt2.item_value as 'location',
-      pd.createdAt, 
-      pd.updatedAt
-  from
-      admin_tables adt1,
-      admin_tables adt2,
-      wp_participants_databases pd
-  where 
-       pd.department_id = adt1.id
-      and pd.location_id = adt2.id
-
-  `)
-  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
-    .then(data => {
-      res.send(data);
-    })
-}
-
-
-
-
-// pretty find all - formatted
-exports.findbyDepartment = (req, res) => {
-  const data = req.params.id;
-  const location_id = req.body.location_id;
-  const formattedUserQuery = (`
-  select 
-  pd.id, 
-      pd.first_name, 
-      pd.last_name,
-      pd.phone, 
-      pd.alt_phone,
-      pd.email,
-      pd.title,
-      adt1.item_value as 'department',
-      adt2.item_value as 'location',
-      pd.createdAt, 
-      pd.updatedAt
-  from
-      admin_tables adt1,
-      admin_tables adt2,
-      wp_participants_databases pd
-  where 
-      adt1.id = ${data}
-      and pd.department_id = adt1.id
-      and pd.location_id = adt2.id
-
-  `)
-  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
-    .then(data => {
-      res.send(data);
-    })
-}
-
-
-
-
 // Find a single EmpDB with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.findByPk(id)
+  InventoryDB.findByPk(id)
     .then(data => {
       res.send(data);
     })
@@ -151,7 +73,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.update(req.body, {
+  InventoryDB.update(req.body, {
     where: { id: id }
   })
     .then(num => {
@@ -176,7 +98,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  EmpDB.destroy({
+  InventoryDB.destroy({
     where: { id: id }
   })
     .then(num => {
@@ -199,7 +121,7 @@ exports.delete = (req, res) => {
 
 // Delete all EmpDBs from the database.
 exports.deleteAll = (req, res) => {
-  EmpDB.destroy({
+  InventoryDB.destroy({
     where: {},
     truncate: false
   })
@@ -216,7 +138,7 @@ exports.deleteAll = (req, res) => {
 
 // find all published EmpDB
 exports.findAllPublished = (req, res) => {
-  EmpDB.findAll({ where: { published: true } })
+  InventoryDB.findAll({ where: { published: true } })
     .then(data => {
       res.send(data);
     })
@@ -227,83 +149,3 @@ exports.findAllPublished = (req, res) => {
       });
     });
 };
-
-
-
-// pretty find all - formatted
-exports.findbyNames = (req, res) => {
-  const data = req.params.search
-  const formattedUserQuery = (`
-  select 
-  pd.id, 
-      pd.first_name, 
-      pd.last_name
-  from
-
-      wp_participants_databases pd
-  where 
-      pd.first_name like '%${data}%'
-      or pd.last_name like '%${data}%'
-
-  `)
-  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
-    .then(data => {
-      res.send(data);
-    })
-}
-
-
-exports.findbyOwnership = (req, res) => {
-  const userid = req.params.userid;
-  const formattedUserQuery = (`
-  
-  select 
-  pd.id, 
-      pd.first_name, 
-      pd.last_name,
-      pd.phone, 
-      pd.alt_phone,
-      pd.email,
-      pd.title,
-      adt1.item_value as 'department',
-      adt2.item_value as 'location',
-      pd.createdAt, 
-      pd.updatedAt
-  from
-      admin_tables adt1,
-      admin_tables adt2,
-      wp_participants_databases pd,
-      item_management_s im
-  where 
-      im.item_owner_id = ${userid}
-      and im.item_id = adt1.id
-      and pd.department_id = adt1.id
-      and pd.location_id = adt2.id
-
-  `)
-  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
-    .then(data => {
-      res.send(data);
-    })
-}
-
-
-
-exports.departmentalOwnership = (req, res) => {
-  const userid = req.params.userid;
-  const formattedUserQuery = (`
-  select 
-      adt1.item_value
-  from
-      admin_tables adt1,
-      item_management_s im
-  where 
-      im.item_owner_id = ${userid}
-      and im.item_id = adt1.id
-      
-        `)
-  EmpDB.sequelize.query(formattedUserQuery, { type: EmpDB.sequelize.QueryTypes.SELECT })
-    .then(data => {
-      res.send(data);
-    })
-}

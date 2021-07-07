@@ -1,6 +1,0 @@
-{
-    "user_session_config": {
-        "sessionTimeout":30,
-        "tokenLength":128
-    }
-}
