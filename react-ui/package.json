@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@devexpress/dx-react-core": "^2.7.5",
-    "@devexpress/dx-react-grid": "^2.7.5",
-    "@devexpress/dx-react-grid-bootstrap4": "^2.7.5",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -13,8 +10,6 @@
     "async": "^3.2.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
-    "bunyan": "^1.8.15",
-    "devextreme": "^20.2.6",
     "jquery": "^3.6.0",
     "ldapjs": "^2.2.4",
     "popper.js": "^1.16.1",
@@ -22,7 +17,6 @@
     "react-bootstrap": "^1.5.2",
     "react-bootstrap-icons": "^1.4.0",
     "react-dom": "^17.0.2",
-    "react-dropdown-select": "^4.7.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-select": "^4.3.0",
@@ -30,7 +24,6 @@
     "react-table": "^7.6.3",
     "react-timeout": "^2.0.1",
     "redux": "^4.0.5",
-    "underscore": "^1.13.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
